@@ -1,4 +1,8 @@
+import time
+
 import streamlit as st
+
+from knowledge_base import KnowledgeBaseService
 
 # 添加网页标题
 st.title("知识库更新服务")
@@ -10,6 +14,10 @@ uploader_file = st.file_uploader(
     accept_multiple_files=False
 )
 
+# session_state 就是一个字典
+if "service" not in st.session_state:
+    st.session_state["service"] = KnowledgeBaseService()
+
 if uploader_file is not None:
     file_name = uploader_file.name
     file_type = uploader_file.type
@@ -20,4 +28,8 @@ if uploader_file is not None:
 
     # get_value ->
     text = uploader_file.getvalue().decode("utf-8")
-    st.write(text)
+    with st.spinner('载入知识库中....'):
+        time.sleep(1)
+        result = st.session_state["service"].upload_by_str(text, file_name)
+        st.write(result)
+        st.write(text)
