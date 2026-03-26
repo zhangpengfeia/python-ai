@@ -1,10 +1,14 @@
+'''
+文档存入向量数据库
+'''
+
 from langchain_chroma import Chroma
 from langchain_community.embeddings import DashScopeEmbeddings
 
 import config_data as config
 
 
-class VectorStoreService( object):
+class VectorStoreService(object):
     def __init__(self, embedding):
         self.embedding = embedding
         self.vector_store = Chroma(

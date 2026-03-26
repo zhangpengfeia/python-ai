@@ -1,3 +1,7 @@
+'''
+知识库上传界面
+'''
+
 import time
 
 import streamlit as st
@@ -9,8 +13,8 @@ st.title("知识库更新服务")
 
 # file_uploader
 uploader_file = st.file_uploader(
-    "请上传md文件",
-    type=["md"],
+    "请上传txt文件",
+    type=["txt"],
     accept_multiple_files=False
 )
 

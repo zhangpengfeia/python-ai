@@ -1,3 +1,7 @@
+'''
+配置
+'''
+
 md5_path = "./md5.text"
 
 collection_name="rag"
@@ -14,3 +18,9 @@ similarity_threshold = 2
 
 embedding_model_name = "text-embedding-v4"
 chat_model_name = "qwen3:4b"
+
+session_config = {
+    "configurable": {
+        "session_id": "小白"
+    }
+}

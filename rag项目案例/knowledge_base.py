@@ -1,3 +1,7 @@
+'''
+知识库上传服务
+'''
+
 import hashlib
 import os
 from datetime import datetime
@@ -40,7 +44,7 @@ class KnowledgeBaseService(object):
         os.makedirs(config.persist_directory, exist_ok=True)
         self.chroma = Chroma(
             collection_name=config.collection_name, # 数据库表名
-            embedding_function=DashScopeEmbeddings(), # DashScopeEmbeddings(model="text-embedding-v4"),
+            embedding_function=DashScopeEmbeddings(model=config.embedding_model_name),
             persist_directory=config.persist_directory,
         ) # 向量存储的实例 chroma向量库对象
         self.spliter = RecursiveCharacterTextSplitter(
