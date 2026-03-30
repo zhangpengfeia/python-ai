@@ -1,0 +1,361 @@
+2026-03-30 15:11:54,735 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf成功
+2026-03-30 15:13:32,744 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:13:42,213 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt成功
+2026-03-30 15:13:52,466 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt成功
+2026-03-30 15:14:11,155 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt成功
+2026-03-30 15:14:23,303 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt成功
+2026-03-30 15:14:33,420 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt成功
+2026-03-30 15:26:40,998 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:26:41,000 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:26:41,002 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:26:41,004 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:26:41,006 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:26:41,007 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:29:18,436 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:29:18,438 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:29:18,440 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:29:18,442 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:29:18,444 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:29:18,447 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:34:09,645 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:34:09,646 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:34:09,648 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:34:09,649 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:34:09,651 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:34:09,652 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:35:03,478 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:35:03,480 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:35:03,482 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:35:03,484 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:35:03,486 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:35:03,488 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:35:18,213 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:35:18,215 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:35:18,216 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:35:18,218 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:35:18,219 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:35:18,220 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:35:58,065 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:35:58,067 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:35:58,068 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:35:58,069 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:35:58,071 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:35:58,072 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:37:01,269 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:37:01,271 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:37:01,272 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:37:01,274 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:37:01,275 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:37:01,277 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:38:05,931 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf成功
+2026-03-30 15:38:08,938 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt成功
+2026-03-30 15:38:13,432 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt成功
+2026-03-30 15:38:23,448 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt成功
+2026-03-30 15:38:29,843 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt成功
+2026-03-30 15:38:35,088 - agent - INFO - vector_store.py:84 - [加载知识库]向量库添加文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt成功
+2026-03-30 15:39:51,792 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:39:51,793 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:39:51,795 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:39:51,797 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:39:51,798 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:39:51,799 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 15:40:32,466 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 15:40:32,468 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 15:40:32,470 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 15:40:32,472 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 15:40:32,474 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 15:40:32,476 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:03:56,032 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:03:56,034 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:03:56,036 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:03:56,038 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:03:56,040 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:03:56,042 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:04:21,602 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:04:21,604 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:04:21,606 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:04:21,609 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:04:21,611 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:04:21,612 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:09:26,545 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:09:26,546 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:09:26,548 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:09:26,549 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:09:26,551 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:09:26,553 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:12:19,070 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:12:19,071 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:12:19,073 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:12:19,074 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:12:19,075 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:12:19,077 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:13:20,231 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:13:20,233 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:13:20,234 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:13:20,236 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:13:20,239 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:13:20,240 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:13:54,291 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:13:54,293 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:13:54,294 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:13:54,296 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:13:54,297 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:13:54,298 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:14:00,246 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:14:00,247 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:14:00,249 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:14:00,251 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:14:00,252 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:14:00,253 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:19:23,021 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:19:23,023 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:19:23,025 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:19:23,027 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:19:23,029 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:19:23,031 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:33:39,160 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:33:39,162 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:33:39,163 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:33:39,165 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:33:39,166 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:33:39,168 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:35:47,199 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:35:47,201 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:35:47,203 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:35:47,205 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:35:47,207 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:35:47,209 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:36:21,739 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:36:21,741 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:36:21,743 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:36:21,746 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:36:21,748 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:36:21,750 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:38:10,482 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:38:10,484 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:38:10,485 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:38:10,486 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:38:10,488 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:38:10,489 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:40:12,711 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问.pdf已处理过
+2026-03-30 16:40:12,713 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫地机器人100问2.txt已处理过
+2026-03-30 16:40:12,714 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\扫拖一体机器人100问.txt已处理过
+2026-03-30 16:40:12,716 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\故障排除.txt已处理过
+2026-03-30 16:40:12,718 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\维护保养.txt已处理过
+2026-03-30 16:40:12,720 - agent - INFO - vector_store.py:69 - [加载知识库]文件D:\zl\ai大模型\python-ai\agent项目案例\data\选购指南.txt已处理过
+2026-03-30 16:41:42,899 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 170, in embed_query
+    embedding = embed_with_retry(
+                ~~~~~~~~~~~~~~~~^
+        self, input=text, text_type="query", model=self.model
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )[0]["embedding"]
+    ^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 83, in embed_with_retry
+    return _embed_with_retry(**kwargs)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 70, in _embed_with_retry
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+2026-03-30 16:43:25,355 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：Error code: 404 - {'error': {'message': 'Unsupported model `multimodal-embedding-v1` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': '55019656-d4f7-9f2c-9609-4ca50a3c505d'}
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 801, in embed_query
+    return self.embed_documents([text], **kwargs)[0]
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 751, in embed_documents
+    return self._get_len_safe_embeddings(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        texts, engine=engine, chunk_size=chunk_size, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 618, in _get_len_safe_embeddings
+    response = self.client.create(input=batch_tokens, **client_kwargs)
+  File "D:\python\Lib\site-packages\openai\resources\embeddings.py", line 136, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/embeddings",
+        ^^^^^^^^^^^^^^
+    ...<8 lines>...
+        cast_to=CreateEmbeddingResponse,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Unsupported model `multimodal-embedding-v1` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': '55019656-d4f7-9f2c-9609-4ca50a3c505d'}
+2026-03-30 16:44:24,720 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：Error code: 404 - {'error': {'message': 'Unsupported model `qwen3-vl-embedding` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': '646dbfb7-10c6-99a8-bb17-19efd984871f'}
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 801, in embed_query
+    return self.embed_documents([text], **kwargs)[0]
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 751, in embed_documents
+    return self._get_len_safe_embeddings(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        texts, engine=engine, chunk_size=chunk_size, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 618, in _get_len_safe_embeddings
+    response = self.client.create(input=batch_tokens, **client_kwargs)
+  File "D:\python\Lib\site-packages\openai\resources\embeddings.py", line 136, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/embeddings",
+        ^^^^^^^^^^^^^^
+    ...<8 lines>...
+        cast_to=CreateEmbeddingResponse,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Unsupported model `qwen3-vl-embedding` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': '646dbfb7-10c6-99a8-bb17-19efd984871f'}
+2026-03-30 16:44:59,493 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：Error code: 404 - {'error': {'message': 'Unsupported model `tongyi-embedding-vision-plus-2026-03-06` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': 'ebe73e60-6b51-9668-81c9-c67a6143cc8a'}
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 801, in embed_query
+    return self.embed_documents([text], **kwargs)[0]
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 751, in embed_documents
+    return self._get_len_safe_embeddings(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        texts, engine=engine, chunk_size=chunk_size, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\langchain_openai\embeddings\base.py", line 618, in _get_len_safe_embeddings
+    response = self.client.create(input=batch_tokens, **client_kwargs)
+  File "D:\python\Lib\site-packages\openai\resources\embeddings.py", line 136, in create
+    return self._post(
+           ~~~~~~~~~~^
+        "/embeddings",
+        ^^^^^^^^^^^^^^
+    ...<8 lines>...
+        cast_to=CreateEmbeddingResponse,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python\Lib\site-packages\openai\_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Unsupported model `tongyi-embedding-vision-plus-2026-03-06` for OpenAI compatibility mode.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_supported'}, 'request_id': 'ebe73e60-6b51-9668-81c9-c67a6143cc8a'}
+2026-03-30 16:45:39,682 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 170, in embed_query
+    embedding = embed_with_retry(
+                ~~~~~~~~~~~~~~~~^
+        self, input=text, text_type="query", model=self.model
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )[0]["embedding"]
+    ^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 83, in embed_with_retry
+    return _embed_with_retry(**kwargs)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 70, in _embed_with_retry
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+2026-03-30 16:46:49,826 - agent - ERROR - vector_store.py:95 - 嵌入模型测试失败：status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent项目案例\rag\vector_store.py", line 92, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 170, in embed_query
+    embedding = embed_with_retry(
+                ~~~~~~~~~~~~~~~~^
+        self, input=text, text_type="query", model=self.model
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )[0]["embedding"]
+    ^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 83, in embed_with_retry
+    return _embed_with_retry(**kwargs)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 70, in _embed_with_retry
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
