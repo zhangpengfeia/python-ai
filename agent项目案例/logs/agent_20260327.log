@@ -1,0 +1,15 @@
+2026-03-27 14:52:32,150 - agent - INFO - log_tool.py:50 - 信息日志
+2026-03-27 14:52:32,151 - agent - ERROR - log_tool.py:51 - 错误日志
+2026-03-27 14:52:32,151 - agent - DEBUG - log_tool.py:52 - 调试日志
+2026-03-27 14:52:32,151 - agent - WARNING - log_tool.py:53 - 警告日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:201 - 信息日志
+2026-03-27 15:16:10 - agent - [31mERROR[0m - log_tool.py:202 - 错误日志
+2026-03-27 15:16:10 - agent - DEBUG - log_tool.py:203 - 调试日志
+2026-03-27 15:16:10 - agent - [33mWARNING[0m - log_tool.py:204 - 警告日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:157 - [采样 5] 这是第 5 条日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:157 - [采样 10] 这是第 10 条日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:157 - [采样 15] 这是第 15 条日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:157 - [采样 20] 这是第 20 条日志
+2026-03-27 15:16:10 - agent - [32mINFO[0m - log_tool.py:175 - 这是一条快捷信息日志
+2026-03-27 15:16:10 - agent - [31mERROR[0m - log_tool.py:181 - 这是一条快捷错误日志
+NoneType: None

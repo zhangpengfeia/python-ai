@@ -1,0 +1,3 @@
+2026-03-27 15:16:10 - agent - [31mERROR[0m - log_tool.py:202 - 错误日志
+2026-03-27 15:16:10 - agent - [31mERROR[0m - log_tool.py:181 - 这是一条快捷错误日志
+NoneType: None
