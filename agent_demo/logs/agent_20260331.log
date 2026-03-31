@@ -1,0 +1,85 @@
+2026-03-31 09:44:09,791 - agent - WARNING - agent_tools.py:66 - [外部数据] 未找到用户1003的5月月数据
+2026-03-31 09:44:27,051 - agent - WARNING - agent_tools.py:66 - [外部数据] 未找到用户1001的2025-01月数据
+2026-03-31 09:47:05,795 - agent - WARNING - agent_tools.py:67 - [外部数据] 未找到用户1001的2025-01月数据
+2026-03-31 15:33:25,202 - agent - ERROR - vector_store.py:102 - 嵌入模型测试失败：status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+Traceback (most recent call last):
+  File "D:\zl\ai大模型\python-ai\agent_demo\rag\vector_store.py", line 99, in <module>
+    test_embedding = embed_model.embed_query("测试")
+                     ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 170, in embed_query
+    embedding = embed_with_retry(
+                ~~~~~~~~~~~~~~~~^
+        self, input=text, text_type="query", model=self.model
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )[0]["embedding"]
+    ^
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 83, in embed_with_retry
+    return _embed_with_retry(**kwargs)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 331, in wrapped_f
+    return copy(f, *args, **kw)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "D:\python\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "D:\python\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "D:\python\Lib\site-packages\langchain_community\embeddings\dashscope.py", line 70, in _embed_with_retry
+    raise ValueError(
+    ...<2 lines>...
+    )
+ValueError: status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+2026-03-31 16:17:51,232 - agent - INFO - vector_store.py:101 - 嵌入模型测试成功，向量维度：1536
+2026-03-31 16:17:51,385 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问.pdf已处理过
+2026-03-31 16:17:51,387 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问2.txt已处理过
+2026-03-31 16:17:51,390 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫拖一体机器人100问.txt已处理过
+2026-03-31 16:17:51,393 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\故障排除.txt已处理过
+2026-03-31 16:17:51,395 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\维护保养.txt已处理过
+2026-03-31 16:17:51,398 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\选购指南.txt已处理过
+2026-03-31 16:19:54,194 - agent - INFO - vector_store.py:101 - 嵌入模型测试成功，向量维度：1536
+2026-03-31 16:19:54,352 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问.pdf已处理过
+2026-03-31 16:19:54,353 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问2.txt已处理过
+2026-03-31 16:19:54,355 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫拖一体机器人100问.txt已处理过
+2026-03-31 16:19:54,356 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\故障排除.txt已处理过
+2026-03-31 16:19:54,358 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\维护保养.txt已处理过
+2026-03-31 16:19:54,359 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\选购指南.txt已处理过
+2026-03-31 16:20:51,005 - agent - INFO - vector_store.py:101 - 嵌入模型测试成功，向量维度：1536
+2026-03-31 16:21:08,576 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问.pdf已处理过
+2026-03-31 16:21:08,579 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问2.txt已处理过
+2026-03-31 16:21:08,583 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫拖一体机器人100问.txt已处理过
+2026-03-31 16:21:08,586 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\故障排除.txt已处理过
+2026-03-31 16:21:08,589 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\维护保养.txt已处理过
+2026-03-31 16:21:08,592 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\选购指南.txt已处理过
+2026-03-31 16:21:47,758 - agent - INFO - vector_store.py:101 - 嵌入模型测试成功，向量维度：1536
+2026-03-31 16:21:47,867 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问.pdf已处理过
+2026-03-31 16:21:47,869 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问2.txt已处理过
+2026-03-31 16:21:47,870 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\扫拖一体机器人100问.txt已处理过
+2026-03-31 16:21:47,872 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\故障排除.txt已处理过
+2026-03-31 16:21:47,873 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\维护保养.txt已处理过
+2026-03-31 16:21:47,875 - agent - INFO - vector_store.py:77 - [加载知识库] 文件D:\zl\ai大模型\python-ai\agent_demo\data\选购指南.txt已处理过
+2026-03-31 16:22:43,441 - agent - INFO - vector_store.py:101 - 嵌入模型测试成功，向量维度：1536
+2026-03-31 16:22:47,013 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问.pdf成功
+2026-03-31 16:22:49,850 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\扫地机器人100问2.txt成功
+2026-03-31 16:22:53,839 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\扫拖一体机器人100问.txt成功
+2026-03-31 16:22:59,279 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\故障排除.txt成功
+2026-03-31 16:23:03,632 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\维护保养.txt成功
+2026-03-31 16:23:06,267 - agent - INFO - vector_store.py:92 - [加载知识库] 向量库添加文件D:\zl\ai大模型\python-ai\agent_demo\data\选购指南.txt成功
+2026-03-31 16:40:59,812 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2024-05月数据
+2026-03-31 16:41:04,453 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的5月月数据
+2026-03-31 16:43:35,756 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2024-05月数据
+2026-03-31 16:43:40,983 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2024-5月数据
+2026-03-31 16:47:06,525 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2024-05月数据
+2026-03-31 16:47:11,114 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2023-05月数据
+2026-03-31 16:50:15,819 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的2024-05月数据
+2026-03-31 16:50:24,992 - agent - WARNING - agent_tools.py:62 - [外部数据] 未找到用户1003的5月月数据
