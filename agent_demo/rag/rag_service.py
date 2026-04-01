@@ -39,7 +39,6 @@ class RagSummarizeService(object):
 
     def retriever_docs(self, query: str) -> list[Document]:
         return self.retriever.invoke(query)
-
     def rag_summarize(self, query: str) -> str:
         context_docs = self.retriever_docs(query)
         context = ""
@@ -47,7 +46,6 @@ class RagSummarizeService(object):
         for doc in context_docs:
             counter += 1
             context += f"【参考资料{counter}】: 参考资料：{doc.page_content} | 参考元数据：{doc.metadata}\n"
-
         return self.chain.invoke(
             {
                 "input": query,

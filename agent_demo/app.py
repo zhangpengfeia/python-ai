@@ -2,6 +2,9 @@ import time
 
 import streamlit as st
 from agent.react_agent import ReactAgent
+from agent.tools.api_user_location import api_city
+
+city_info = api_city()
 
 st.title("智能扫地机器人客服")
 st.divider()

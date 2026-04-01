@@ -6,6 +6,9 @@ from rag.rag_service import RagSummarizeService
 from utils.config_handler import agent_conf
 from utils.logger_handler import logger
 from utils.path_tool import get_abs_path
+from agent.tools.api_user_location import api_city
+from agent.tools.api_weather import api_weather
+
 rag = RagSummarizeService()
 external_data = {}
 
@@ -14,13 +17,17 @@ external_data = {}
 def rag_summarize(query: str) -> str:
     return rag.rag_summarize(query)
 
-@tool(description="获取城市天气,消息字符串形式返回")
-def get_weather(city: str) -> str:
-    return f"城市{city}天气为晴天，气温26摄氏度，空气湿度60%，风度1级"
+@tool(description="获取当前城市天气,消息字符串形式返回")
+def get_weather() -> str:
+    city_info = api_city()
+    weather = api_weather(city_info["location_id"])
+    return weather
 
 @tool(description="获取用户所在城市名称，字符串形式返回")
 def get_user_location() -> str:
-    return "北京"
+    # 执行获取
+    city_info = api_city()
+    return city_info
 
 @tool(description="获取用户id")
 def get_user_id() -> str:
