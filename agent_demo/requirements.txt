@@ -6,8 +6,8 @@ python-dotenv
 cryptography
 requests
 pyjwt
-
-# 新增FastAPI相关
+streamlit
+# 新增 FastAPI 相关
 fastapi
 uvicorn[standard]
 pydantic
