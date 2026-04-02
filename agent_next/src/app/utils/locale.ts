@@ -4,7 +4,7 @@ import enUS_antd from 'antd/locale/en_US';
 import zhCN_antd from 'antd/locale/zh_CN';
 
 const zhCN = {
-  whatIsAntDesignX: '什么是 Ant Design X？',
+  whatIsAntDesignX: '什么是 Ai智能教育助手 X？',
   today: '今天',
   howToQuicklyInstallAndImportComponents: '如何快速安装和导入组件？',
   newAgiHybridInterface: '新的 AGI 混合界面',
@@ -19,8 +19,8 @@ const zhCN = {
   components: '组件',
   richGuide: 'RICH 指南',
   installationIntroduction: '安装介绍',
-  whatHasAntDesignXUpgraded: 'Ant Design X 有哪些升级？',
-  whatComponentsAreInAntDesignX: 'Ant Design X 中有哪些组件？',
+  whatHasAntDesignXUpgraded: 'Ai智能教育助手 X 有哪些升级？',
+  whatComponentsAreInAntDesignX: 'Ai智能教育助手 X 中有哪些组件？',
   comeAndDiscoverNewDesignParadigm: '快来发现 AI 时代的新设计范式。',
   requestFailedPleaseTryAgain: '请求失败，请重试！',
   requestAborted: '请求已中止',
@@ -51,12 +51,12 @@ const zhCN = {
   isMock: '当前为模拟功能',
   retry: '重新生成',
   placeholder: '点击 Enter 发送消息',
-  agentName: 'Ant Design X 助手',
-  slotTextStart: '请帮我介绍 Ant Design X 中',
+  agentName: 'Ai智能教育助手 X 助手',
+  slotTextStart: '请帮我介绍 Ai智能教育助手 X 中',
   slotTextEnd: '的用法。',
   aiMessage_1: `RICH 设计范式 \n [查看详情](/docs/spec/introduce-cn})`,
   aiMessage_2: `# 快速安装和导入组件 \n\n \`npm install @ant-design/x --save \` \n [查看详情](/components/introduce-cn/)\n \n\n <br />\n\n## 导入方式 \n\n \`\`\`tsx \n\n import { Bubble } from '@ant-design/x';\n\n \`\`\`\n\n ## 组件使用 \n\n \`\`\`tsx\n\n import React from 'react';\n\nimport { Bubble } from '@ant-design/x';\n\nconst App: React.FC = () => ( \n\n <div className="App"> \n\n  <Bubble content="Hello world!" />\n\n </div>\n\n  );\n\n export default App;`,
-  welcome: `你好，我是 Ant Design X`,
+  welcome: `你好，我是 Ai智能教育助手 X`,
   welcomeDescription: `基于蚂蚁设计，AGI 产品界面解决方案，打造更好的智能视觉~~`,
   aiCopilot: 'AI 助手',
 
@@ -65,12 +65,12 @@ const zhCN = {
   drawAPicture: '画图',
   checkSomeKnowledge: '查看知识',
   aboutReact: '关于 React',
-  aboutAntDesign: '关于 Ant Design',
+  aboutAntDesign: '关于 Ai智能教育助手',
   messageIsRequesting: '消息正在请求中，您可以在请求完成后创建新对话或立即中止...',
   clickOrDragFilesToThisAreaToUpload: '点击或将文件拖到此处上传',
   more: '更多',
-  helloImAntDesignX: '你好，我是 Ant Design X',
-  baseOnAntDesign: '基于 Ant Design，AGI 产品界面解决方案，创造更智能的视觉体验~',
+  helloImAntDesignX: '你好，我是 Ai智能教育助手 X',
+  baseOnAntDesign: '基于 Ai智能教育助手，AGI 产品界面解决方案，创造更智能的视觉体验~',
   iCanHelp: '我可以帮助：',
 
   // 历史消息内容
@@ -78,10 +78,10 @@ const zhCN = {
     newSession: {
       user: '新会话',
       assistant:
-        '你好，我是 Ant Design X！基于 Ant Design，AGI 产品界面解决方案，创造更智能的视觉体验~',
+        '你好，我是 Ai智能教育助手 X！基于 Ai智能教育助手，AGI 产品界面解决方案，创造更智能的视觉体验~',
     },
     whatHasAntDesignXUpgraded: {
-      user: 'Ant Design X 有哪些升级？',
+      user: 'Ai智能教育助手 X 有哪些升级？',
       assistant: 'RICH 设计范式 \n [查看详情](/docs/spec/introduce-cn})',
     },
     newAgiHybridInterface: {
@@ -91,18 +91,18 @@ const zhCN = {
     howToQuicklyInstallAndImportComponents: {
       user: '如何快速安装和导入组件？',
       assistant:
-        "Ant Design X 提供了丰富的组件库。安装很简单：`npm install @ant-design/x --save`。然后你可以导入需要的组件，比如：`import { Bubble, Sender, Conversations } from '@ant-design/x'`。每个组件都有详细的文档和示例。",
+        "Ai智能教育助手 X 提供了丰富的组件库。安装很简单：`npm install @ant-design/x --save`。然后你可以导入需要的组件，比如：`import { Bubble, Sender, Conversations } from '@ant-design/x'`。每个组件都有详细的文档和示例。",
     },
     whatIsAntDesignX: {
-      user: '什么是 Ant Design X？',
+      user: '什么是 Ai智能教育助手 X？',
       assistant:
-        '什么是 Ant Design X？ 它是基于 Ant Design 的 AGI 产品界面解决方案，专为 AI 时代设计的 React 组件库。包含了对话、气泡、发送器等核心组件，帮助开发者快速构建智能对话界面。',
+        '什么是 Ai智能教育助手 X？ 它是基于 Ai智能教育助手 的 AGI 产品界面解决方案，专为 AI 时代设计的 React 组件库。包含了对话、气泡、发送器等核心组件，帮助开发者快速构建智能对话界面。',
     },
   },
 };
 
 const enUS = {
-  whatIsAntDesignX: 'What is Ant Design X?',
+  whatIsAntDesignX: 'What is Ai智能教育助手 X?',
   today: 'Today',
   howToQuicklyInstallAndImportComponents: 'How to quickly install and import components?',
   newAgiHybridInterface: 'New AGI Hybrid Interface',
@@ -117,8 +117,8 @@ const enUS = {
   components: 'Components',
   richGuide: 'RICH Guide',
   installationIntroduction: 'Installation Introduction',
-  whatHasAntDesignXUpgraded: 'What has Ant Design X upgraded?',
-  whatComponentsAreInAntDesignX: 'What components are in Ant Design X?',
+  whatHasAntDesignXUpgraded: 'What has Ai智能教育助手 X upgraded?',
+  whatComponentsAreInAntDesignX: 'What components are in Ai智能教育助手 X?',
   comeAndDiscoverNewDesignParadigm: 'Come and discover the new design paradigm of the AI era.',
   requestFailedPleaseTryAgain: 'Request failed, please try again!',
   requestAborted: 'Request aborted',
@@ -149,27 +149,27 @@ const enUS = {
   isMock: 'It is Mock',
   retry: 'retry',
   placeholder: 'Press Enter to send message',
-  agentName: 'Ant Design X Assistant',
+  agentName: 'Ai智能教育助手 X Assistant',
   slotTextStart: 'Please help me introduce the usage of ',
-  slotTextEnd: 'in Ant Design X.',
+  slotTextEnd: 'in Ai智能教育助手 X.',
   aiMessage_1: `RICH Design Paradigm \n [View Details](/docs/spec/induction)`,
   aiMessage_2: `# Quickly install and import components \n\n \`npm install @ant-design/x --save\` \n [View details](/components/introduce)\n\n <br /> \n\n ## Import Method \n\n \`\`\`tsx \n\n import { Bubble } from '@ant-design/x';\n\n \`\`\`\n\n ## Component Usage \n\n \`\`\`tsx\n\n import React from 'react';\n\nimport { Bubble } from '@ant-design/x';\n\nconst App: React.FC = () => ( \n\n <div className="App"> \n\n  <Bubble content="Hello world!" />\n\n </div>\n\n  );\n\n export default App;`,
-  welcome: `Hello,I'm Ant Design X`,
-  welcomeDescription: `Base on Ant Design, AGI product interface solution, create a better intelligent vision~`,
+  welcome: `Hello,I'm Ai智能教育助手 X`,
+  welcomeDescription: `Base on Ai智能教育助手, AGI product interface solution, create a better intelligent vision~`,
   aiCopilot: 'AI Copilot',
   newSession: 'New session',
   writeAReport: 'Write a report',
   drawAPicture: 'Draw a picture',
   checkSomeKnowledge: 'Check some knowledge',
   aboutReact: 'About React',
-  aboutAntDesign: 'About Ant Design',
+  aboutAntDesign: 'About Ai智能教育助手',
   messageIsRequesting:
     'Message is Requesting, you can create a new conversation after request done or abort it right now...',
   clickOrDragFilesToThisAreaToUpload: 'Click or drag files to this area to upload',
   more: 'More',
-  helloImAntDesignX: "Hello, I'm Ant Design X",
+  helloImAntDesignX: "Hello, I'm Ai智能教育助手 X",
   baseOnAntDesign:
-    'Base on Ant Design, AGI product interface solution, create a better intelligent vision~',
+    'Base on Ai智能教育助手, AGI product interface solution, create a better intelligent vision~',
   iCanHelp: 'I can help:',
 
   // 历史消息内容
@@ -177,10 +177,10 @@ const enUS = {
     newSession: {
       user: 'New session',
       assistant:
-        "Hello, I'm Ant Design X! Base on Ant Design, AGI product interface solution, create a better intelligent vision~",
+        "Hello, I'm Ai智能教育助手 X! Base on Ai智能教育助手, AGI product interface solution, create a better intelligent vision~",
     },
     whatHasAntDesignXUpgraded: {
-      user: 'What has Ant Design X upgraded?',
+      user: 'What has Ai智能教育助手 X upgraded?',
       assistant: 'RICH Design Paradigm \n [View Details](/docs/spec/induction)',
     },
     newAgiHybridInterface: {
@@ -190,12 +190,12 @@ const enUS = {
     howToQuicklyInstallAndImportComponents: {
       user: 'How to quickly install and import components?',
       assistant:
-        "Ant Design X provides a rich component library. Installation is simple: `npm install @ant-design/x --save`. Then you can import the components you need, such as: `import { Bubble, Sender, Conversations } from '@ant-design/x'`. Each component has detailed documentation and examples.",
+        "Ai智能教育助手 X provides a rich component library. Installation is simple: `npm install @ant-design/x --save`. Then you can import the components you need, such as: `import { Bubble, Sender, Conversations } from '@ant-design/x'`. Each component has detailed documentation and examples.",
     },
     whatIsAntDesignX: {
-      user: 'What is Ant Design X?',
+      user: 'What is Ai智能教育助手 X?',
       assistant:
-        'What is Ant Design X? It is an AGI product interface solution based on Ant Design, a React component library designed for the AI era. It includes core components such as conversations, bubbles, and senders to help developers quickly build intelligent conversation interfaces.',
+        'What is Ai智能教育助手 X? It is an AGI product interface solution based on Ai智能教育助手, a React component library designed for the AI era. It includes core components such as conversations, bubbles, and senders to help developers quickly build intelligent conversation interfaces.',
     },
   },
 };

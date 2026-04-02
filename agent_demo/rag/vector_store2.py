@@ -9,6 +9,7 @@ from utils.query_chroma import chroma_client
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
+
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -37,6 +38,7 @@ class VectorStoreService:
             length_function=len
         )
 
+
     # 向量数据库的检索器
     def get_retriever(self):
         return self.vector_store.as_retriever(search_kwargs={"k": chroma_conf["k"]})
@@ -48,7 +50,7 @@ class VectorStoreService:
         def check_md5_hex(md5_for_check):
             if not os.path.exists(get_abs_path(chroma_conf["md5_hex_store"])):
                 open(get_abs_path(chroma_conf["md5_hex_store"]), "w", encoding="utf-8").close()
-                return False  # md5 没处理过
+                return False # md5 没处理过
             with open(get_abs_path(chroma_conf["md5_hex_store"]), "r", encoding="utf-8") as f:
                 for line in f.readlines():
                     line = line.strip()
@@ -59,7 +61,6 @@ class VectorStoreService:
         def save_md5_hex(md5_hex_str: str):
             with open(get_abs_path(chroma_conf["md5_hex_store"]), "a", encoding="utf-8") as f:
                 f.write(md5_hex_str + "\n")
-
         # 获取文件
         def get_file_documents(read_path: str):
             if read_path.endswith("txt"):
@@ -96,7 +97,6 @@ class VectorStoreService:
                 logger.error(f"[加载知识库] 向量库添加文件{path}失败，{str(e)}", exc_info=True)
                 continue
 
-
 if __name__ == '__main__':
     # 测试嵌入模型是否工作
     try:
@@ -105,11 +105,11 @@ if __name__ == '__main__':
     except Exception as e:
         logger.error(f"嵌入模型测试失败：{str(e)}", exc_info=True)
         exit(1)
-
+    
     vs = VectorStoreService()
     vs.add_document()
     retriever = vs.get_retriever()
     res = retriever.invoke("维护保养")
     for r in res:
         print(r.page_content)
-        print("_" * 20)
+        print("_"*20)

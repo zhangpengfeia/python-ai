@@ -50,7 +50,7 @@ import React, { useRef, useState } from 'react';
 import '@ant-design/x-markdown/themes/light.css';
 import '@ant-design/x-markdown/themes/dark.css';
 import { BubbleListRef } from '@ant-design/x/es/bubble';
-import { useMarkdownTheme } from '../Xmarkdown/utils';
+import { useMarkdownTheme } from './Xmarkdown/utils';
 import locale from '@/app/utils/locale';
 
 // ==================== Style ====================
@@ -58,7 +58,8 @@ const useStyle = createStyles(({ token, css }) => {
   return {
     layout: css`
       width: 100%;
-      height: 100vh;
+      //height: calc(100vh - 260px);
+      height: 100%;
       display: flex;
       background: ${token.colorBgContainer};
       font-family: AlibabaPuHuiTi, ${token.fontFamily}, sans-serif;
@@ -573,7 +574,7 @@ const Independent: React.FC = () => {
           width={24}
           height={24}
         />
-        <span>Ant Design X</span>
+        <span>Ai智能教育助手</span>
       </div>
       {/* 🌟 会话管理 */}
       <Conversations
