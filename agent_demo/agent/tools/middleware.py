@@ -1,67 +1,53 @@
-import time
-import re
-
-import streamlit as st
-from agent.react_agent import ReactAgent
-from agent.tools.api_user_location import api_city
-
-city_info = api_city()
-
-st.title("智能扫地机器人客服")
-st.divider()
-
-# 创建智能助手
-if "agent" not in st.session_state:
-    st.session_state["agent"] = ReactAgent()
-
-# 会话记录
-if "message" not in st.session_state:
-    st.session_state["message"] = []
-
-for message in st.session_state["message"]:
-    st.chat_message(message["role"]).write(message["content"])
-
-# 用户输入提示词
-prompt = st.chat_input()
-
-if prompt:
-    st.chat_message("user").write(prompt)
-    st.session_state["message"].append({"role": "user", "content": prompt})
-    response_messages = []
+from typing import Callable
+from utils.prompt_loader import load_system_prompts, load_report_prompts
+from langchain.agents import AgentState
+from langchain.agents.middleware import wrap_tool_call, before_model, dynamic_prompt, ModelRequest
+from langchain.tools.tool_node import ToolCallRequest
+from langchain_core.messages import ToolMessage
+from langgraph.runtime import Runtime
+from langgraph.types import Command
+from utils.logger_handler import logger
 
 
-    # 过滤 JSON 内容的函数
-    def filter_json_content(text):
-        """过滤掉 JSON 格式的内容，只保留友好文本"""
-        # 匹配大括号包裹的 JSON 对象
-        json_pattern = r'\{[^{}]*\}'
-        # 如果文本包含 JSON 特征（大括号、引号、冒号的组合），则过滤掉
-        if re.search(json_pattern, text) and ('"' in text or ':' in text):
-            return None
-        return text
+@wrap_tool_call
+def monitor_tool(
+        # 请求的数据封装
+        request: ToolCallRequest,
+        # 执行的函数本身
+        handler: Callable[[ToolCallRequest], ToolMessage | Command],
+) -> ToolMessage | Command:             # 工具执行的监控
+    logger.info(f"[tool monitor]执行工具：{request.tool_call['name']}")
+    logger.info(f"[tool monitor]传入参数：{request.tool_call['args']}")
+
+    try:
+        result = handler(request)
+        logger.info(f"[tool monitor]工具{request.tool_call['name']}调用成功")
+
+        if request.tool_call['name'] == "fill_context_for_report":
+            request.runtime.context["report"] = True
+
+        return result
+    except Exception as e:
+        logger.error(f"工具{request.tool_call['name']}调用失败，原因：{str(e)}")
+        raise e
 
 
-    with st.spinner("智能客户思考中..."):
-        res_stream = st.session_state["agent"].execute_stream(prompt)
+@before_model
+def log_before_model(
+        state: AgentState,          # 整个Agent智能体中的状态记录
+        runtime: Runtime,           # 记录了整个执行过程中的上下文信息
+):         # 在模型执行前输出日志
+    logger.info(f"[log_before_model]即将调用模型，带有{len(state['messages'])}条消息。")
+
+    logger.debug(f"[log_before_model]{type(state['messages'][-1]).__name__} | {state['messages'][-1].content.strip()}")
+
+    return None
 
 
-        def capture(generator, cache_list):
-            for chunk in generator:
-                # 过滤掉 JSON 内容
-                filtered_chunk = filter_json_content(chunk)
-                if filtered_chunk:
-                    cache_list.append(filtered_chunk)
-                    for char in filtered_chunk:
-                        time.sleep(0.01)
-                        yield char
-                    yield filtered_chunk
-            # 如果没有有效内容，显示默认回复
-            if not cache_list:
-                default_response = "已收到您的问题，我正在处理..."
-                cache_list.append(default_response)
-                yield default_response
+@dynamic_prompt                 # 每一次在生成提示词之前，调用此函数
+def report_prompt_switch(request: ModelRequest):     # 动态切换提示词
+    is_report = request.runtime.context.get("report", False)
+    if is_report:               # 是报告生成场景，返回报告生成提示词内容
+        return load_report_prompts()
 
-
-        st.chat_message("assistant").write_stream(capture(res_stream, response_messages))
-        st.session_state["message"].append({"role": "assistant", "content": response_messages[-1]})
-        st.rerun()
+    return load_system_prompts()

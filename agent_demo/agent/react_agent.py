@@ -2,6 +2,7 @@ from langchain.agents import create_agent
 from langchain.agents import create_agent
 # 工具导入（已正确）
 from agent.tools.agent_tools import rag_summarize, get_weather, get_user_location, get_user_id, fetch_external_data,fill_context_for_report, get_current_month
+from agent.tools.middleware import monitor_tool, log_before_model, report_prompt_switc
 # 模型导入（已正确）
 from model.factory import chat_model
 # ✅ 修复这一行：去掉 ..
@@ -21,7 +22,7 @@ class ReactAgent:
                 fetch_external_data,
                 fill_context_for_report,
             ],
-            middleware=[]
+            middleware=[monitor_tool, log_before_model, report_prompt_switc]
         )
 
     def execute_stream(self, query: str):

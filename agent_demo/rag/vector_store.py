@@ -1,6 +1,5 @@
 import sys
 from pathlib import Path
-from utils.query_chroma import chroma_client
 import pymysql
 
 # 把agent_demo根目录加入搜索路径
@@ -15,6 +14,7 @@ from utils.config_handler import chroma_conf
 from utils.file_handler import txt_loader, pdf_loader, listdir_with_allowed_type, get_file_md5_hex
 from utils.logger_handler import logger
 from utils.path_tool import get_abs_path
+from utils.query_chroma import chroma_client
 
 # ====================== MySQL 配置 ======================
 DB_CONFIG = {
