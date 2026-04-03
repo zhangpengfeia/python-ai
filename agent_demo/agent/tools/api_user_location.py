@@ -1,3 +1,4 @@
+
 import requests
 from utils.get_hefeng_key import generate_jwt
 
@@ -52,6 +53,7 @@ def api_city():
         "西安": "Xi'an",
         "西安市": "Xi'an"
     }
+
     data["city_en"] = city_en_map.get(data["city"], data["city"])
     return data
 

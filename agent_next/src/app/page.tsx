@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Home() {
+export default function Main() {
   return (
     <div className="flex items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-        首页
+        home
     </div>
   );
 }

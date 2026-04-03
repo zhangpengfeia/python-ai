@@ -448,6 +448,7 @@ const providerFactory = (conversationKey: string) => {
       }),
     );
   }
+  console.log(providerCaches)
   return providerCaches.get(conversationKey);
 };
 

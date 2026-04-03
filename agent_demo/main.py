@@ -29,4 +29,12 @@ add_exception_handlers(app)
 async def health_check():
     return {"status": "ok", "message": "AI服务正常运行"}
 
-# ❌ 删除整个 if __name__ == "__main__" 块
+# 启动服务入口（必须添加）
+if __name__ == "__main__":
+    # 启动uvicorn Web服务，参数和命令行启动完全一致
+    uvicorn.run(
+        app="main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True  # 开发环境开启热重载，生产环境必须改为False
+    )

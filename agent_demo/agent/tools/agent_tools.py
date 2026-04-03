@@ -15,7 +15,7 @@ external_data = {}
 
 @tool(description="从向量存储中检索参考资料")
 def rag_summarize(query: str) -> str:
-    return rag.rag_summarize(query)
+    return rag.rag_summarize_stream(query)
 
 @tool(description="获取当前城市天气,消息字符串形式返回")
 def get_weather() -> str:

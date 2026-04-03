@@ -39,7 +39,7 @@ export default function BasicLayout({
           {/* 核心：让内容区域自动占满全部高度 */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
               {/*<Layout>*/}
-                  {children}
+              {children}
               {/*</Layout>*/}
           </div>
         </ConfigProvider>
