@@ -44,10 +44,15 @@ def log_before_model(
     return None
 
 
-@dynamic_prompt                 # 每一次在生成提示词之前，调用此函数
-def report_prompt_switch(request: ModelRequest):     # 动态切换提示词
-    is_report = request.runtime.context.get("report", False)
-    if is_report:               # 是报告生成场景，返回报告生成提示词内容
+@dynamic_prompt  # 每一次在生成提示词之前，调用此函数
+def report_prompt_switch(request: ModelRequest):  # 动态切换提示词
+    # 检查 runtime 和 context 是否存在
+    if request.runtime and request.runtime.context:
+        is_report = request.runtime.context.get("report", False)
+    else:
+        is_report = False
+
+    if is_report:  # 是报告生成场景，返回报告生成提示词内容
         return load_report_prompts()
 
     return load_system_prompts()

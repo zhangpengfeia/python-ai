@@ -32,16 +32,12 @@ import {
 } from '@ant-design/x';
 import type { ComponentProps } from '@ant-design/x-markdown';
 import XMarkdown from '@ant-design/x-markdown';
-import type { DefaultMessageInfo } from '@ant-design/x-sdk';
 import {
-  DeepSeekChatProvider,
-  SSEFields,
   useXChat,
   useXConversations,
   XModelMessage,
-  XModelParams,
-  XModelResponse,
   XRequest,
+  AbstractChatProvider, DefaultMessageInfo, XRequestOptions
 } from '@ant-design/x-sdk';
 import { Avatar, Button, Flex, type GetProp, message, Pagination, Space } from 'antd';
 import { createStyles } from 'antd-style';
@@ -319,13 +315,6 @@ const THOUGHT_CHAIN_CONFIG = {
   },
 };
 
-// ==================== Type ====================
-interface ChatMessage extends XModelMessage {
-  extraInfo?: {
-    feedback: ActionsFeedbackProps['value'];
-  };
-}
-
 // ==================== Context ====================
 const ChatContext = React.createContext<{
   onReload?: ReturnType<typeof useXChat>['onReload'];
@@ -422,35 +411,119 @@ const Footer: React.FC<{
   ) : null;
 };
 
-// ==================== Chat Provider ====================
-/**
- * 🔔 Please replace the BASE_URL, MODEL with your own values.
- */
-const providerCaches = new Map<string, DeepSeekChatProvider>();
-const providerFactory = (conversationKey: string) => {
-  if (!providerCaches.get(conversationKey)) {
-    providerCaches.set(
-      conversationKey,
-      new DeepSeekChatProvider({
-        request: XRequest<XModelParams, Partial<Record<SSEFields, XModelResponse>>>(
-          'https://api.x.ant.design/api/big_model_glm-4.5-flash',
-          {
-            manual: true,
-            params: {
-              stream: true,
-              thinking: {
-                type: 'disabled',
-              },
-              model: 'glm-4.5-flash',
-            },
-          },
-        ),
-      }),
-    );
+// 类型定义：自定义聊天系统的输入输出和消息结构
+// Type definitions: custom chat system input/output and message structure
+interface CustomInput {
+  messages: Array<{
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+  }>;
+  stream?: boolean;
+  model?: string;
+}
+
+interface CustomOutput {
+  data: {
+    content: string;
+    attachments?: {
+      name: string;
+      url: string;
+      type: string;
+      size?: number;
+    }[];
+  };
+}
+// ==================== Type ====================
+interface ChatMessage extends CustomMessage {
+  extraInfo?: {
+    feedback: ActionsFeedbackProps['value'];
+  };
+}
+
+interface CustomMessage extends XModelMessage{
+  content: string;
+  role: 'user' | 'assistant' | 'system';
+}
+
+// 自定义Provider实现：继承AbstractChatProvider实现自定义聊天逻辑
+class CustomProvider<
+  ChatMessage extends CustomMessage = CustomMessage,
+  Input extends CustomInput = CustomInput,
+  Output extends CustomOutput = CustomOutput,
+> extends AbstractChatProvider<ChatMessage, Input, Output> {
+  // 转换请求参数：将用户输入消息，转换为参数标准格式
+  transformParams(
+    requestParams: Partial<Input>,
+    options: XRequestOptions<Input, Output, ChatMessage>,
+  ): Input {
+    if (typeof requestParams !== 'object') {
+      throw new Error('requestParams must be an object');
+    }
+    return {
+      messages: requestParams.messages || [],
+      stream: requestParams.stream ?? options?.params?.stream ?? true,
+      model: requestParams.model ?? options?.params?.model ?? 'qwen2.5-7b-instruct',
+    } as Input;
   }
-  console.log(providerCaches)
-  return providerCaches.get(conversationKey);
-};
+
+  // 转换本地消息：将请求参数转换为本地消息格式
+  // Transform local message: convert request parameters to local message format
+  transformLocalMessage(requestParams: Partial<Input>): ChatMessage {
+    console.log('transformLocalMessage', requestParams)
+    const lastMessage = requestParams.messages?.[requestParams.messages.length - 1];
+    return {
+      content: lastMessage?.content || '',
+      role: lastMessage?.role || 'user',
+    } as ChatMessage;
+  }
+
+  // 转换消息：处理流式响应数据
+  // Transform message: process streaming response data
+  transformMessage(info: any): ChatMessage {
+    const { originMessage, chunk } = info || {};
+    // 处理完成标记或空数据
+    // Handle completion marker or empty data
+    if (!chunk || !chunk?.data || chunk?.data?.includes('[DONE]')) {
+      return {
+        content: originMessage?.content || '',
+        role: 'assistant'
+      } as ChatMessage;
+    }
+
+    try {
+      // 处理流式数据：解析JSON格式
+      // Process streaming data: parse JSON format
+      const data = JSON.parse(chunk.data);
+      const content = originMessage?.content || '';
+
+      // 合并附件信息，避免数据丢失
+      // Merge attachment information to avoid data loss
+      const existingAttachments = originMessage?.attachments || [];
+      const newAttachments: CustomMessage['attachments'] = data.attachments || [];
+      const mergedAttachments = [...existingAttachments];
+
+      // 只添加新的附件，避免重复
+      // Only add new attachments to avoid duplicates
+      newAttachments?.forEach((newAttach: NonNullable<CustomMessage['attachments']>[0]) => {
+        if (!mergedAttachments.some((existing) => existing.url === newAttach.url)) {
+          mergedAttachments.push(newAttach);
+        }
+      });
+
+      return {
+        content: `${content}${data.content || ''}`,
+        role: 'assistant'
+      } as ChatMessage;
+    } catch (_error) {
+      // 如果解析失败，直接使用原始数据
+      // If parsing fails, use raw data directly
+      return {
+        content: `${originMessage?.content || ''}${chunk.data || ''}`,
+        role: 'assistant'
+      } as ChatMessage;
+    }
+  }
+}
 
 const historyMessageFactory = (conversationKey: string): DefaultMessageInfo<ChatMessage>[] => {
   return HISTORY_MESSAGES[conversationKey] || [];
@@ -507,6 +580,21 @@ const Independent: React.FC = () => {
   const { styles } = useStyle();
   // ==================== State ====================
 
+  // 使用自定义Provider：创建自定义聊天提供者实例
+  // Use custom provider: create custom chat provider instance
+  const [provider] = React.useState(
+    new CustomProvider<CustomMessage, CustomInput, CustomOutput>({
+      request: XRequest('http://127.0.0.1:8000/api/v1/chat/stream', {
+        manual: true,
+        params: {
+          messages: [],
+          stream: true,
+          model: 'qwen2.5-7b-instruct',
+        },
+      }),
+    }),
+  );
+
   const {
     conversations,
     activeConversationKey,
@@ -529,29 +617,29 @@ const Independent: React.FC = () => {
 
   // ==================== Runtime ====================
 
-  const { onRequest, messages, isRequesting, abort, onReload, setMessage } = useXChat<ChatMessage>({
-    provider: providerFactory(activeConversationKey), // every conversation has its own provider
-    conversationKey: activeConversationKey,
+  const { onRequest, messages, isRequesting, abort, onReload, setMessage } = useXChat({
+    provider: provider, // every conversation has its own provider
     defaultMessages: historyMessageFactory(activeConversationKey),
-    requestPlaceholder: () => {
-      return {
+    conversationKey: activeConversationKey,
+    requestPlaceholder: {
         content: locale.noData,
-        role: 'assistant',
-      };
+        role: 'assistant' as const,
     },
-    requestFallback: (_, { error, errorInfo, messageInfo }) => {
+    requestFallback:  (_, { error, errorInfo, messageInfo }) => {
       if (error.name === 'AbortError') {
         return {
           content: messageInfo?.message?.content || locale.requestAborted,
-          role: 'assistant',
+          role: 'assistant' as const,
         };
       }
       return {
         content: errorInfo?.error?.message || locale.requestFailed,
-        role: 'assistant',
+        role: 'assistant' as const,
       };
     },
   });
+
+
 
   // ==================== Event ====================
   const onSubmit = (val: string) => {

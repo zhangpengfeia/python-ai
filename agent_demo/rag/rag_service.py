@@ -80,5 +80,4 @@ class RagSummarizeService(object):
                 yield chunk
 if __name__ == '__main__':
     rag = RagSummarizeService()
-
     print(rag.rag_summarize_stream("小户型适合哪些扫地机器人"))

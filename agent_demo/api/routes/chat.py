@@ -14,16 +14,20 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# 1. 定义符合前端要求的请求模型
+# 1. 定义消息结构
+class Message(BaseModel):
+    role: Literal["user", "assistant", "system"] = Field(..., description="消息角色")
+    content: str = Field(..., description="消息内容")
+
+
+# 2. 定义符合前端CustomInput要求的请求模型
 class CustomChatRequest(BaseModel):
-    query: str = Field(..., description="用户输入的查询内容")
-    role: Literal["user"] = Field("user", description="消息角色，固定为user")
-    stream: bool = Field(True, description="是否启用流式输出，建议保持True")
-    model: str = Field(..., description="模型名称，例如 qwen2.5-7b-instruct")
-    session_id: Optional[str] = Field("default", description="会话ID，支持多会话")
+    messages: List[Message] = Field(..., description="消息列表，包含完整的对话历史")
+    stream: Optional[bool] = Field(True, description="是否启用流式输出")
+    model: Optional[str] = Field("qwen2.5-7b-instruct", description="模型名称")
 
 
-# 2. 改造后的流式对话接口
+# 3. 改造后的流式对话接口
 @router.post("/stream")
 async def chat_stream(
         request: CustomChatRequest,
@@ -31,45 +35,35 @@ async def chat_stream(
 ):
     try:
         # 参数校验
-        if not request.query.strip():
-            raise HTTPException(status_code=400, detail="查询内容不能为空")
-        logger.info(f"收到请求 - 模型: {request.model}, 会话ID: {request.session_id}")
-
-        async def event_generator():
+        if not request.messages:
+            raise HTTPException(status_code=400, detail="消息列表不能为空")
+        
+        # 获取最后一条用户消息
+        last_user_message = None
+        for msg in reversed(request.messages):
+            if msg.role == "user":
+                last_user_message = msg.content
+                break
+        
+        if not last_user_message or not last_user_message.strip():
+            raise HTTPException(status_code=400, detail="用户查询内容不能为空")
+        
+        logger.info(f"收到请求 - 模型: {request.model}, 消息数: {len(request.messages)}")
+        
+        def event_generator():
             try:
-                # 收集所有chunk以计算进度（实际生产中可根据token数或迭代进度动态计算）
-                chunks = []
-                for chunk in agent.execute_stream(request.query):
-                    chunks.append(chunk)
-                total_chunks = len(chunks)
-                # 发送流式内容块（带进度）
-                for idx, chunk in enumerate(chunks):
-                    # 计算进度（避免除以0）
-                    progress = int((idx + 1) / total_chunks * 100) if total_chunks > 0 else 100
-
+                chunk_count = 0
+                # 真正的流式：逐个接收并立即发送
+                for chunk in agent.execute_stream(last_user_message):
+                    chunk_count += 1
                     # 构造流式数据格式
                     stream_data = {
                         "content": chunk,
                         "isStreaming": True,
-                        "progress": progress
+                        "progress": 0
                     }
                     yield f"data: {json.dumps(stream_data, ensure_ascii=False)}\n\n"
-
-                # 发送最终完成块（带附件）
-                final_data = {
-                    "content": "",
-                    "attachments": [
-                        {
-                            "name": "科技新闻总结.pdf",
-                            "url": "https://x.ant.design/download/report.pdf",
-                            "type": "pdf",
-                            "size": 102400
-                        }
-                    ],
-                    "isComplete": True
-                }
-                yield f"data: {json.dumps(final_data, ensure_ascii=False)}\n\n"
-
+                
                 # 发送结束标记
                 yield "data: [DONE]\n\n"
 

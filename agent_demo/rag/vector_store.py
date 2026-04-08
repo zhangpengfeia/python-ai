@@ -84,7 +84,6 @@ class VectorStoreService:
 
     # 数据文件内读取数据文件，转为向量存入向量库，计算 md5 去重
     def add_document(self):
-
         # 获取文件
         def get_file_documents(read_path: str):
             if read_path.endswith("txt"):
@@ -101,29 +100,23 @@ class VectorStoreService:
         for path in allowed_files_path:
             md5_hex = get_file_md5_hex(path)
             file_name = Path(path).name
-
             # ========== 改用 MySQL 判断 ==========
             if self.md5_store.exists(md5_hex):
                 logger.info(f"[加载知识库] 文件{path}已处理过（MySQL）")
                 continue
-
             try:
                 documents = get_file_documents(path)
                 if not documents:
                     logger.warning(f"[加载知识库]{path}没有有效文本，跳过")
                     continue
-
                 split_documents: list[Document] = self.spliter.split_documents(documents)
                 if not split_documents:
                     logger.warning(f"[加载知识库]{path}分片没有有效文本，跳过")
                     continue
-
                 # 添加内容存入向量库
                 self.vector_store.add_documents(split_documents)
-
                 # ========== 保存 MD5 到 MySQL ==========
                 self.md5_store.save(md5_hex, file_name)
-
                 logger.info(f"[加载知识库] 向量库添加文件{path}成功")
             except Exception as e:
                 logger.error(f"[加载知识库] 向量库添加文件{path}失败，{str(e)}", exc_info=True)
