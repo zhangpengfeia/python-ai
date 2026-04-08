@@ -193,17 +193,7 @@ const DEFAULT_CONVERSATIONS_ITEMS = [
     key: 'default-0',
     label: locale.whatIsAntDesignX,
     group: locale.today,
-  },
-  {
-    key: 'default-1',
-    label: locale.howToQuicklyInstallAndImportComponents,
-    group: locale.today,
-  },
-  {
-    key: 'default-2',
-    label: locale.newAgiHybridInterface,
-    group: locale.yesterday,
-  },
+  }
 ];
 
 const HOT_TOPICS = {
@@ -525,8 +515,46 @@ class CustomProvider<
   }
 }
 
+// 从后端获取会话历史消息
+const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMessageInfo<ChatMessage>[]> => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/message/history/${conversationKey}?limit=50`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('获取历史消息失败');
+    }
+
+    const data = await response.json();
+    
+    // 后端返回格式为 { code: 200, data: { messages: [...], total: number } }
+    if (data.code === 200 && data.data?.messages && Array.isArray(data.data.messages)) {
+      return data.data.messages.map((msg: any) => ({
+        message: {
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+        },
+        status: 'success' as const,
+      }));
+    }
+  } catch (error) {
+    console.error('获取历史消息失败:', error);
+  }
+  return [];
+};
+
 const historyMessageFactory = (conversationKey: string): DefaultMessageInfo<ChatMessage>[] => {
-  return HISTORY_MESSAGES[conversationKey] || [];
+  // 如果是默认会话，使用本地数据
+  if (conversationKey.startsWith('default-')) {
+    return HISTORY_MESSAGES[conversationKey] || [];
+  }
+  // 否则从后端获取
+  // 注意：这里需要使用 React.useEffect 或异步方式加载
+  return [];
 };
 
 const getRole = (className: string): BubbleListProps['role'] => ({
@@ -594,7 +622,6 @@ const Independent: React.FC = () => {
       }),
     }),
   );
-
   const {
     conversations,
     activeConversationKey,
@@ -605,6 +632,96 @@ const Independent: React.FC = () => {
     defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
     defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
   });
+
+  const getApiDefaultConversations = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/v1/chat/session/list?limit=50', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('获取会话列表失败');
+    }
+
+    const data = await response.json();
+
+    // 后端返回格式为 { code: 200, data: { sessions: [...], total: number } }
+    if (data.code === 200 && data.data?.sessions && Array.isArray(data.data.sessions)) {
+      const conversations = data.data.sessions.map((item: any) => ({
+        key: item.session_id,
+        label: item.session_name || '未命名会话',
+        group: item.group || locale.today,
+      }));
+      setConversations(conversations);
+      // 设置默认激活的会话
+      if (conversations.length > 0 && !activeConversationKey) {
+        setActiveConversationKey(conversations[0].key);
+      }
+      return conversations;
+    }
+  } catch (error) {
+    console.error('获取会话列表失败:', error);
+    messageApi.error('获取会话列表失败，请稍后重试');
+  }
+  return [];
+};
+
+  // 创建新会话
+  const handleCreateNewConversation = async () => {
+    try {
+      // 如果当前有未保存的消息，提示用户
+      if (messages.length === 0) {
+        messageApi.error(locale.itIsNowANewConversation);
+        return;
+      }
+
+      // 调用后端接口创建新会话
+      const response = await fetch('http://127.0.0.1:8000/api/v1/chat/session/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_name: `${locale.newConversation} ${conversations.length + 1}`,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('创建会话失败');
+      }
+
+      const data = await response.json();
+      
+      if (data.code === 200 && data.data?.session_id) {
+        const newSessionId = data.data.session_id;
+        
+        // 添加新会话到列表
+        addConversation({
+          key: newSessionId,
+          label: data.data.session_name || `${locale.newConversation} ${conversations.length + 1}`,
+          group: locale.today,
+        });
+        
+        // 激活新会话
+        setActiveConversationKey(newSessionId);
+        
+        messageApi.success('创建新会话成功');
+      } else {
+        throw new Error('创建会话失败');
+      }
+    } catch (error) {
+      console.error('创建新会话失败:', error);
+      messageApi.error('创建新会话失败，请稍后重试');
+    }
+  };
+
+  // 组件挂载时加载会话列表
+  React.useEffect(() => {
+    getApiDefaultConversations();
+  }, []);
 
   const [className] = useMarkdownTheme();
   const [messageApi, contextHolder] = message.useMessage();
@@ -668,19 +785,7 @@ const Independent: React.FC = () => {
       {/* 🌟 会话管理 */}
       <Conversations
         creation={{
-          onClick: () => {
-            if (messages.length === 0) {
-              messageApi.error(locale.itIsNowANewConversation);
-              return;
-            }
-            const now = dayjs().valueOf().toString();
-            addConversation({
-              key: now,
-              label: `${locale.newConversation} ${conversations.length + 1}`,
-              group: locale.today,
-            });
-            setActiveConversationKey(now);
-          },
+          onClick: handleCreateNewConversation,
         }}
         items={conversations.map(({ key, label, ...other }) => ({
           key,
@@ -689,7 +794,18 @@ const Independent: React.FC = () => {
         }))}
         className={styles.conversations}
         activeKey={activeConversationKey}
-        onActiveChange={setActiveConversationKey}
+        onActiveChange={(key) => {
+          setActiveConversationKey(key);
+          // 切换会话时，从后端加载该会话的历史消息
+          getApiHistoryMessages(key).then((historyMessages) => {
+            if (historyMessages.length > 0) {
+              console.log(historyMessages)
+              // 这里需要更新 useXChat 的消息状态
+              // 由于 useXChat 不直接提供设置消息的方法，可能需要重新初始化或使用其他方式
+              console.log('Loaded history messages for conversation:', key, historyMessages);
+            }
+          });
+        }}
         groupable
         styles={{ item: { padding: '0 8px' } }}
         menu={(conversation) => ({
@@ -698,18 +814,69 @@ const Independent: React.FC = () => {
               label: locale.rename,
               key: 'rename',
               icon: <EditOutlined />,
+              onClick: async () => {
+                try {
+                  const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/session/${conversation.key}/rename`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      session_name: conversation.label.replace(/^\[.*?\]/, ''), // 移除前缀标签
+                    }),
+                  });
+
+                  if (!response.ok) {
+                    throw new Error('重命名失败');
+                  }
+
+                  const data = await response.json();
+                  if (data.code === 200) {
+                    messageApi.success('重命名成功');
+                    // 刷新会话列表
+                    getApiDefaultConversations();
+                  }
+                } catch (error) {
+                  console.error('重命名失败:', error);
+                  messageApi.error('重命名失败，请稍后重试');
+                }
+              },
             },
             {
               label: locale.delete,
               key: 'delete',
               icon: <DeleteOutlined />,
               danger: true,
-              onClick: () => {
-                const newList = conversations.filter((item) => item.key !== conversation.key);
-                const newKey = newList?.[0]?.key;
-                setConversations(newList);
-                if (conversation.key === activeConversationKey) {
-                  setActiveConversationKey(newKey);
+              onClick: async () => {
+                try {
+                  // 调用后端删除接口
+                  const response = await fetch(`http://127.0.0.1:8000/api/v1/chat/session/${conversation.key}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  });
+
+                  if (!response.ok) {
+                    throw new Error('删除失败');
+                  }
+
+                  const data = await response.json();
+                  if (data.code === 200) {
+                    // 从前端列表中移除
+                    const newList = conversations.filter((item) => item.key !== conversation.key);
+                    const newKey = newList?.[0]?.key;
+                    setConversations(newList);
+                    
+                    if (conversation.key === activeConversationKey) {
+                      setActiveConversationKey(newKey);
+                    }
+                    
+                    messageApi.success('删除成功');
+                  }
+                } catch (error) {
+                  console.error('删除失败:', error);
+                  messageApi.error('删除失败，请稍后重试');
                 }
               },
             },
