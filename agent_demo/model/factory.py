@@ -34,7 +34,9 @@ class ChatModelFactory(BaseModelFactory):
 
 class ChatOllamaModelFactory(BaseModelFactory):
     def generator(self) -> Optional[Embeddings | BaseChatModel]:
-        return ChatOllama(model=rag_conf["chat_oll_model_name"],  streaming=True) # 启用流式输出
+        return ChatTongyi(model=rag_conf["chat_model_name"], streaming=True)
+    # def generator(self) -> Optional[Embeddings | BaseChatModel]:
+    #     return ChatOllama(model=rag_conf["chat_oll_model_name"],  streaming=True) # 启用流式输出
 
 chat_model = ChatModelFactory().generator()
 chat_oll_model = ChatOllamaModelFactory().generator()

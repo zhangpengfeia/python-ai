@@ -110,3 +110,16 @@ class ChatSession:
         except Exception as e:
             logger.error(f"清空历史失败: {e}")
             return False
+
+    def delete_session(self, session_id):
+        """删除会话及其所有消息"""
+        try:
+            with self.conn.cursor() as cursor:
+                # 先删除该会话的所有消息
+                cursor.execute("DELETE FROM chat_message WHERE session_id=%s", (session_id,))
+                # 再删除会话记录
+                cursor.execute("DELETE FROM chat_session WHERE session_id=%s", (session_id,))
+            return True
+        except Exception as e:
+            logger.error(f"删除会话失败: {e}")
+            return False

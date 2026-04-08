@@ -163,15 +163,16 @@ def delete_session(
 ):
     """
     删除指定会话及其所有消息
-
     - **session_id**: 会话ID（路径参数）
-
     返回：
     - **success**: 是否成功
     """
     try:
-        # 先清空消息，再删除会话（如果需要删除会话记录，需要在 ChatSession 中添加方法）
-        session_manager.clear_history(session_id)
+        # 删除会话记录及其所有消息
+        success = session_manager.delete_session(session_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="删除会话失败")
+        
         return {
             "code": 200,
             "message": "删除成功",
@@ -179,11 +180,11 @@ def delete_session(
                 "session_id": session_id
             }
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"删除会话异常: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"删除失败: {str(e)}")
-
-
 # ==================== 消息管理接口 ====================
 
 @router.post("/message/add", summary="添加消息")

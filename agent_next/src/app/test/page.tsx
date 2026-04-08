@@ -459,7 +459,6 @@ class CustomProvider<
   // 转换本地消息：将请求参数转换为本地消息格式
   // Transform local message: convert request parameters to local message format
   transformLocalMessage(requestParams: Partial<Input>): ChatMessage {
-    console.log('transformLocalMessage', requestParams)
     const lastMessage = requestParams.messages?.[requestParams.messages.length - 1];
     return {
       content: lastMessage?.content || '',
@@ -533,6 +532,7 @@ const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMe
     
     // 后端返回格式为 { code: 200, data: { messages: [...], total: number } }
     if (data.code === 200 && data.data?.messages && Array.isArray(data.data.messages)) {
+      console.log(data.data.messages)
       return data.data.messages.map((msg: any) => ({
         message: {
           role: msg.role as 'user' | 'assistant',
@@ -544,16 +544,6 @@ const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMe
   } catch (error) {
     console.error('获取历史消息失败:', error);
   }
-  return [];
-};
-
-const historyMessageFactory = (conversationKey: string): DefaultMessageInfo<ChatMessage>[] => {
-  // 如果是默认会话，使用本地数据
-  if (conversationKey.startsWith('default-')) {
-    return HISTORY_MESSAGES[conversationKey] || [];
-  }
-  // 否则从后端获取
-  // 注意：这里需要使用 React.useEffect 或异步方式加载
   return [];
 };
 
@@ -617,6 +607,7 @@ const Independent: React.FC = () => {
         params: {
           messages: [],
           stream: true,
+          session_id: '',
           model: 'qwen2.5-7b-instruct',
         },
       }),
@@ -731,13 +722,35 @@ const Independent: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
 
   const listRef = useRef<BubbleListRef>(null);
+  const senderRef = useRef<GetProp<typeof Sender>>(null);
 
   // ==================== Runtime ====================
 
-  const { onRequest, messages, isRequesting, abort, onReload, setMessage } = useXChat({
-    provider: provider, // every conversation has its own provider
-    defaultMessages: historyMessageFactory(activeConversationKey),
+  // 获取历史消息列表：从服务器加载历史聊天记录
+  const getDefaultMessages: (info: {
+    conversationKey?: string;
+  }) => Promise<DefaultMessageInfo<ChatMessage>[]> = async ({ conversationKey }) => {
+    if (!conversationKey) return [];
+    
+    // 如果是默认会话，使用本地数据
+    if (conversationKey.startsWith('default-')) {
+      return HISTORY_MESSAGES[conversationKey] || [];
+    }
+    
+    // 否则从后端异步获取历史消息
+    try {
+      const historyMessages = await getApiHistoryMessages(conversationKey);
+      return historyMessages;
+    } catch (error) {
+      console.error('加载历史消息失败:', error);
+      return [];
+    }
+  };
+
+  const { onRequest, messages, isDefaultMessagesRequesting, isRequesting, abort, onReload, setMessage } = useXChat({
+    provider: provider,
     conversationKey: activeConversationKey,
+    defaultMessages: getDefaultMessages,
     requestPlaceholder: {
         content: locale.noData,
         role: 'assistant' as const,
@@ -756,7 +769,10 @@ const Independent: React.FC = () => {
     },
   });
 
-
+  // 当会话切换时，清空输入框
+  React.useEffect(() => {
+    senderRef.current?.clear();
+  }, [activeConversationKey]);
 
   // ==================== Event ====================
   const onSubmit = (val: string) => {
@@ -765,7 +781,6 @@ const Independent: React.FC = () => {
       messages: [{ role: 'user', content: val }],
     });
     listRef.current?.scrollTo({ top: 'bottom' });
-    setActiveConversationKey(activeConversationKey);
   };
 
   // ==================== Nodes ====================
@@ -796,15 +811,6 @@ const Independent: React.FC = () => {
         activeKey={activeConversationKey}
         onActiveChange={(key) => {
           setActiveConversationKey(key);
-          // 切换会话时，从后端加载该会话的历史消息
-          getApiHistoryMessages(key).then((historyMessages) => {
-            if (historyMessages.length > 0) {
-              console.log(historyMessages)
-              // 这里需要更新 useXChat 的消息状态
-              // 由于 useXChat 不直接提供设置消息的方法，可能需要重新初始化或使用其他方式
-              console.log('Loaded history messages for conversation:', key, historyMessages);
-            }
-          });
         }}
         groupable
         styles={{ item: { padding: '0 8px' } }}
@@ -956,6 +962,7 @@ const Independent: React.FC = () => {
                 subItem: { padding: 0, background: 'transparent' },
               }}
               onItemClick={(info) => {
+                console.log(222)
                 onSubmit(info.data.description as string);
               }}
               className={styles.chatPrompt}
@@ -973,6 +980,7 @@ const Independent: React.FC = () => {
                 subItem: { background: '#ffffffa6' },
               }}
               onItemClick={(info) => {
+                console.log(111)
                 onSubmit(info.data.description as string);
               }}
               className={styles.chatPrompt}
@@ -1029,6 +1037,7 @@ const Independent: React.FC = () => {
       )}
       {/* 🌟 输入框 */}
       <Sender
+        ref={senderRef}
         value={inputValue}
         header={senderHeader}
         onSubmit={() => {
