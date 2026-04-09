@@ -42,12 +42,49 @@ import {
 import { Avatar, Button, Flex, type GetProp, message, Pagination, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import React, { useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import '@ant-design/x-markdown/themes/light.css';
 import '@ant-design/x-markdown/themes/dark.css';
 import { BubbleListRef } from '@ant-design/x/es/bubble';
 import { useMarkdownTheme } from './Xmarkdown/utils';
 import locale from '@/app/utils/locale';
+
+
+// 类型定义：自定义聊天系统的输入输出和消息结构
+// Type definitions: custom chat system input/output and message structure
+interface CustomInput {
+  messages: Array<{
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+  }>;
+  userAction?: string
+  stream?: boolean;
+  model?: string;
+  session_id?: string;
+}
+
+interface CustomOutput {
+  data: {
+    content: string;
+    attachments?: {
+      name: string;
+      url: string;
+      type: string;
+      size?: number;
+    }[];
+  };
+}
+// ==================== Type ====================
+interface ChatMessage extends CustomMessage {
+  extraInfo?: {
+    feedback: ActionsFeedbackProps['value'];
+  };
+}
+
+interface CustomMessage extends XModelMessage{
+  content: string;
+  role: 'user' | 'assistant' | 'system';
+}
 
 // ==================== Style ====================
 const useStyle = createStyles(({ token, css }) => {
@@ -158,44 +195,8 @@ const useStyle = createStyles(({ token, css }) => {
     `,
   };
 });
-
 // ==================== Static Config ====================
-const HISTORY_MESSAGES: {
-  [key: string]: DefaultMessageInfo<ChatMessage>[];
-} = {
-  'default-1': [
-    {
-      message: { role: 'user', content: locale.howToQuicklyInstallAndImportComponents },
-      status: 'success',
-    },
-    {
-      message: {
-        role: 'assistant',
-        content: locale.aiMessage_2,
-      },
-      status: 'success',
-    },
-  ],
-  'default-2': [
-    { message: { role: 'user', content: locale.newAgiHybridInterface }, status: 'success' },
-    {
-      message: {
-        role: 'assistant',
-        content: locale.aiMessage_1,
-      },
-      status: 'success',
-    },
-  ],
-};
-
-const DEFAULT_CONVERSATIONS_ITEMS = [
-  {
-    key: 'default-0',
-    label: locale.whatIsAntDesignX,
-    group: locale.today,
-  }
-];
-
+// 热门话题
 const HOT_TOPICS = {
   key: '1',
   label: locale.hotTopics,
@@ -210,24 +211,9 @@ const HOT_TOPICS = {
       description: locale.newAgiHybridInterface,
       icon: <span style={{ color: '#ff6565', fontWeight: 700 }}>2</span>,
     },
-    {
-      key: '1-3',
-      description: locale.whatComponentsAreInAntDesignX,
-      icon: <span style={{ color: '#ff8f1f', fontWeight: 700 }}>3</span>,
-    },
-    {
-      key: '1-4',
-      description: locale.comeAndDiscoverNewDesignParadigm,
-      icon: <span style={{ color: '#00000040', fontWeight: 700 }}>4</span>,
-    },
-    {
-      key: '1-5',
-      description: locale.howToQuicklyInstallAndImportComponents,
-      icon: <span style={{ color: '#00000040', fontWeight: 700 }}>5</span>,
-    },
   ],
 };
-
+// 设计指南
 const DESIGN_GUIDE = {
   key: '2',
   label: locale.designGuide,
@@ -258,7 +244,7 @@ const DESIGN_GUIDE = {
     },
   ],
 };
-
+// 对话footer
 const SENDER_PROMPTS: GetProp<typeof Prompts, 'items'> = [
   {
     key: '1',
@@ -269,19 +255,9 @@ const SENDER_PROMPTS: GetProp<typeof Prompts, 'items'> = [
     key: '2',
     description: locale.components,
     icon: <ProductOutlined />,
-  },
-  {
-    key: '3',
-    description: locale.richGuide,
-    icon: <FileSearchOutlined />,
-  },
-  {
-    key: '4',
-    description: locale.installationIntroduction,
-    icon: <AppstoreAddOutlined />,
-  },
+  }
 ];
-
+// 对话状态码
 const THOUGHT_CHAIN_CONFIG = {
   loading: {
     title: locale.modelIsRunning,
@@ -304,6 +280,14 @@ const THOUGHT_CHAIN_CONFIG = {
     status: 'abort',
   },
 };
+// 本地默认对话
+const DEFAULT_CONVERSATIONS_ITEMS = [
+  {
+    key: 'default-0',
+    label: "新对话",
+    group: "今天",
+  },
+];
 
 // ==================== Context ====================
 const ChatContext = React.createContext<{
@@ -312,11 +296,9 @@ const ChatContext = React.createContext<{
 }>({});
 
 // ==================== Sub Component ====================
-
 const ThinkComponent = React.memo((props: ComponentProps) => {
   const [title, setTitle] = React.useState(`${locale.deepThinking}...`);
   const [loading, setLoading] = React.useState(true);
-
   React.useEffect(() => {
     if (props.streamStatus === 'done') {
       setTitle(locale.completeThinking);
@@ -330,110 +312,6 @@ const ThinkComponent = React.memo((props: ComponentProps) => {
     </Think>
   );
 });
-
-const Footer: React.FC<{
-  id?: string | number;
-  content: string;
-  status?: string;
-  extraInfo?: ChatMessage['extraInfo'];
-}> = ({ id, content, extraInfo, status }) => {
-  const context = React.useContext(ChatContext);
-  const Items = [
-    {
-      key: 'pagination',
-      actionRender: <Pagination simple total={1} pageSize={1} />,
-    },
-    {
-      key: 'retry',
-      label: locale.retry,
-      icon: <SyncOutlined />,
-      onItemClick: () => {
-        if (id) {
-          context?.onReload?.(id, {
-            userAction: 'retry',
-          });
-        }
-      },
-    },
-    {
-      key: 'copy',
-      actionRender: <Actions.Copy text={content} />,
-    },
-    {
-      key: 'audio',
-      actionRender: (
-        <Actions.Audio
-          onClick={() => {
-            message.info(locale.isMock);
-          }}
-        />
-      ),
-    },
-    {
-      key: 'feedback',
-      actionRender: (
-        <Actions.Feedback
-          styles={{
-            liked: {
-              color: '#f759ab',
-            },
-          }}
-          value={extraInfo?.feedback || 'default'}
-          key="feedback"
-          onChange={(val) => {
-            if (id) {
-              context?.setMessage?.(id, () => ({
-                extraInfo: {
-                  feedback: val,
-                },
-              }));
-              message.success(`${id}: ${val}`);
-            } else {
-              message.error('has no id!');
-            }
-          }}
-        />
-      ),
-    },
-  ];
-  return status !== 'updating' && status !== 'loading' ? (
-    <div style={{ display: 'flex' }}>{id && <Actions items={Items} />}</div>
-  ) : null;
-};
-
-// 类型定义：自定义聊天系统的输入输出和消息结构
-// Type definitions: custom chat system input/output and message structure
-interface CustomInput {
-  messages: Array<{
-    role: 'user' | 'assistant' | 'system';
-    content: string;
-  }>;
-  stream?: boolean;
-  model?: string;
-}
-
-interface CustomOutput {
-  data: {
-    content: string;
-    attachments?: {
-      name: string;
-      url: string;
-      type: string;
-      size?: number;
-    }[];
-  };
-}
-// ==================== Type ====================
-interface ChatMessage extends CustomMessage {
-  extraInfo?: {
-    feedback: ActionsFeedbackProps['value'];
-  };
-}
-
-interface CustomMessage extends XModelMessage{
-  content: string;
-  role: 'user' | 'assistant' | 'system';
-}
 
 // 自定义Provider实现：继承AbstractChatProvider实现自定义聊天逻辑
 class CustomProvider<
@@ -449,10 +327,25 @@ class CustomProvider<
     if (typeof requestParams !== 'object') {
       throw new Error('requestParams must be an object');
     }
+    
+    if (requestParams.userAction === 'retry') {
+      const messages = this.getMessages();
+      const queryMessage = (messages || [])?.reverse().find(({ role }) => {
+        return role === 'user';
+      });
+      return {
+        messages: queryMessage ? [{ role: queryMessage.role, content: queryMessage.content }] : [],
+        stream: requestParams.stream ?? options?.params?.stream ?? true,
+        model: requestParams.model ?? options?.params?.model ?? 'qwen2.5-7b-instruct',
+        session_id: requestParams.session_id ?? options?.params?.session_id ?? '',
+      } as Input;
+    }
+
     return {
       messages: requestParams.messages || [],
       stream: requestParams.stream ?? options?.params?.stream ?? true,
       model: requestParams.model ?? options?.params?.model ?? 'qwen2.5-7b-instruct',
+      session_id: requestParams.session_id ?? options?.params?.session_id ?? '',
     } as Input;
   }
 
@@ -478,7 +371,6 @@ class CustomProvider<
         role: 'assistant'
       } as ChatMessage;
     }
-
     try {
       // 处理流式数据：解析JSON格式
       // Process streaming data: parse JSON format
@@ -529,10 +421,9 @@ const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMe
     }
 
     const data = await response.json();
-    
+
     // 后端返回格式为 { code: 200, data: { messages: [...], total: number } }
     if (data.code === 200 && data.data?.messages && Array.isArray(data.data.messages)) {
-      console.log(data.data.messages)
       return data.data.messages.map((msg: any) => ({
         message: {
           role: msg.role as 'user' | 'assistant',
@@ -547,72 +438,34 @@ const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMe
   return [];
 };
 
-const getRole = (className: string): BubbleListProps['role'] => ({
-  assistant: {
-    placement: 'start',
-    header: (_, { status }) => {
-      const config = THOUGHT_CHAIN_CONFIG[status as keyof typeof THOUGHT_CHAIN_CONFIG];
-      return config ? (
-        <ThoughtChain.Item
-          style={{
-            marginBottom: 8,
-          }}
-          status={config.status as ThoughtChainItemProps['status']}
-          variant="solid"
-          icon={<GlobalOutlined />}
-          title={config.title}
-        />
-      ) : null;
-    },
-    footer: (content, { status, key, extraInfo }) => (
-      <Footer
-        content={content}
-        status={status}
-        extraInfo={extraInfo as ChatMessage['extraInfo']}
-        id={key as string}
-      />
-    ),
-    contentRender: (content: any, { status }) => {
-      const newContent = content.replace(/\n\n/g, '<br/><br/>');
-      return (
-        <XMarkdown
-          paragraphTag="div"
-          components={{
-            think: ThinkComponent,
-          }}
-          className={className}
-          streaming={{
-            hasNextChunk: status === 'updating',
-            enableAnimation: true,
-          }}
-        >
-          {newContent}
-        </XMarkdown>
-      );
-    },
-  },
-  user: { placement: 'end' },
-});
-
 const Independent: React.FC = () => {
   const { styles } = useStyle();
   // ==================== State ====================
 
-  // 使用自定义Provider：创建自定义聊天提供者实例
-  // Use custom provider: create custom chat provider instance
-  const [provider] = React.useState(
-    new CustomProvider<CustomMessage, CustomInput, CustomOutput>({
-      request: XRequest('http://127.0.0.1:8000/api/v1/chat/stream', {
-        manual: true,
-        params: {
-          messages: [],
-          stream: true,
-          session_id: '',
-          model: 'qwen2.5-7b-instruct',
-        },
-      }),
-    }),
-  );
+  // 缓存每个会话的 Provider 实例
+  const providerCaches = React.useRef<Map<string, CustomProvider<CustomMessage, CustomInput, CustomOutput>>>(new Map());
+
+  // 根据会话 key 获取或创建 Provider
+  const getProvider = (conversationKey: string) => {
+    if (!providerCaches.current.has(conversationKey)) {
+      providerCaches.current.set(
+        conversationKey,
+        new CustomProvider<CustomMessage, CustomInput, CustomOutput>({
+          request: XRequest('http://127.0.0.1:8000/api/v1/chat/stream', {
+            manual: true,
+            params: {
+              stream: true,
+              messages: [],
+              model: 'qwen2.5-7b-instruct',
+              session_id: conversationKey,
+            },
+          }),
+        }),
+      );
+    }
+    return providerCaches.current.get(conversationKey)!;
+  };
+
   const {
     conversations,
     activeConversationKey,
@@ -624,6 +477,9 @@ const Independent: React.FC = () => {
     defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
   });
 
+  const [className] = useMarkdownTheme();
+  const [messageApi, contextHolder] = message.useMessage();
+  
   const getApiDefaultConversations = async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/v1/chat/session/list?limit=50', {
@@ -632,13 +488,10 @@ const Independent: React.FC = () => {
         'Content-Type': 'application/json',
       },
     });
-
     if (!response.ok) {
       throw new Error('获取会话列表失败');
     }
-
     const data = await response.json();
-
     // 后端返回格式为 { code: 200, data: { sessions: [...], total: number } }
     if (data.code === 200 && data.data?.sessions && Array.isArray(data.data.sessions)) {
       const conversations = data.data.sessions.map((item: any) => ({
@@ -683,22 +536,20 @@ const Independent: React.FC = () => {
       if (!response.ok) {
         throw new Error('创建会话失败');
       }
-
       const data = await response.json();
-      
       if (data.code === 200 && data.data?.session_id) {
         const newSessionId = data.data.session_id;
-        
+
         // 添加新会话到列表
         addConversation({
           key: newSessionId,
           label: data.data.session_name || `${locale.newConversation} ${conversations.length + 1}`,
           group: locale.today,
         });
-        
+
         // 激活新会话
         setActiveConversationKey(newSessionId);
-        
+
         messageApi.success('创建新会话成功');
       } else {
         throw new Error('创建会话失败');
@@ -714,8 +565,6 @@ const Independent: React.FC = () => {
     getApiDefaultConversations();
   }, []);
 
-  const [className] = useMarkdownTheme();
-  const [messageApi, contextHolder] = message.useMessage();
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<GetProp<typeof Attachments, 'items'>>([]);
 
@@ -723,20 +572,18 @@ const Independent: React.FC = () => {
 
   const listRef = useRef<BubbleListRef>(null);
   const senderRef = useRef<GetProp<typeof Sender>>(null);
-
+  // 检测是否在客户端环境
+  const [isClient, setIsClient] = useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
   // ==================== Runtime ====================
-
   // 获取历史消息列表：从服务器加载历史聊天记录
   const getDefaultMessages: (info: {
     conversationKey?: string;
   }) => Promise<DefaultMessageInfo<ChatMessage>[]> = async ({ conversationKey }) => {
     if (!conversationKey) return [];
-    
-    // 如果是默认会话，使用本地数据
-    if (conversationKey.startsWith('default-')) {
-      return HISTORY_MESSAGES[conversationKey] || [];
-    }
-    
     // 否则从后端异步获取历史消息
     try {
       const historyMessages = await getApiHistoryMessages(conversationKey);
@@ -747,8 +594,11 @@ const Independent: React.FC = () => {
     }
   };
 
-  const { onRequest, messages, isDefaultMessagesRequesting, isRequesting, abort, onReload, setMessage } = useXChat({
-    provider: provider,
+  // 获取当前会话的 Provider
+  const currentProvider = activeConversationKey ? getProvider(activeConversationKey) : undefined;
+
+  const { onRequest, messages, isRequesting, abort, onReload, setMessage } = useXChat({
+    provider: currentProvider,
     conversationKey: activeConversationKey,
     defaultMessages: getDefaultMessages,
     requestPlaceholder: {
@@ -774,28 +624,151 @@ const Independent: React.FC = () => {
     senderRef.current?.clear();
   }, [activeConversationKey]);
 
+
+
+
   // ==================== Event ====================
   const onSubmit = (val: string) => {
     if (!val) return;
+    // useXChat 会自动携带当前会话的历史消息
     onRequest({
       messages: [{ role: 'user', content: val }],
     });
     listRef.current?.scrollTo({ top: 'bottom' });
   };
 
+
   // ==================== Nodes ====================
+  const Footer: React.FC<{
+  id?: string | number;
+  content: string;
+  status?: string;
+  extraInfo?: ChatMessage['extraInfo'];
+}> = ({ id, content, extraInfo, status }) => {
+      const lastAssistant = [...messages].reverse().find(i=>i.message?.role==='assistant')
+      const isLastMessage = lastAssistant.id == id && lastAssistant.status == status
+      const context = React.useContext(ChatContext);
+      const Items = [
+        {
+          key: 'pagination',
+          actionRender: <Pagination simple total={1} pageSize={1} />,
+        },
+        ...(isLastMessage ? [{
+          key: 'retry',
+          label: locale.retry,
+          icon: <SyncOutlined />,
+          onItemClick: () => {
+            if (id) {
+              // onReload 会自动使用当前会话的历史消息重新生成
+              context?.onReload?.(id, {
+                userAction: 'retry'
+              });
+            }
+          }
+        }] : []),
+        {
+          key: 'copy',
+          actionRender: <Actions.Copy text={content} />,
+        },
+        {
+          key: 'audio',
+          actionRender: (
+            <Actions.Audio
+              onClick={() => {
+                message.info(locale.isMock);
+              }}
+            />
+          ),
+        },
+        {
+          key: 'feedback',
+          actionRender: (
+            <Actions.Feedback
+              styles={{
+                liked: {
+                  color: '#f759ab',
+                },
+              }}
+              value={extraInfo?.feedback || 'default'}
+              key="feedback"
+              onChange={(val) => {
+                if (id) {
+                  context?.setMessage?.(id, () => ({
+                    extraInfo: {
+                      feedback: val,
+                    },
+                  }));
+                  message.success(`${id}: ${val}`);
+                } else {
+                  message.error('has no id!');
+                }
+              }}
+            />
+          ),
+        },
+      ];
+      return status !== 'updating' && status !== 'loading' ? (
+        <div style={{ display: 'flex' }}>{id && <Actions items={Items} />}</div>
+      ) : null;
+  };
+  const getRole = (className: string): BubbleListProps['role'] => ({
+    assistant: {
+      placement: 'start',
+      header: (_, { status }) => {
+        const config = THOUGHT_CHAIN_CONFIG[status as keyof typeof THOUGHT_CHAIN_CONFIG];
+        return config ? (
+          <ThoughtChain.Item
+            style={{
+              marginBottom: 8,
+            }}
+            status={config.status as ThoughtChainItemProps['status']}
+            variant="solid"
+            icon={<GlobalOutlined />}
+            title={config.title}
+          />
+        ) : null;
+      },
+      footer: (content, { status, key, extraInfo }) => (
+        <Footer
+          content={content}
+          status={status}
+          extraInfo={extraInfo as ChatMessage['extraInfo']}
+          id={key as string}
+        />
+      ),
+      contentRender: (content: any, { status }) => {
+        const newContent = content.replace(/\n\n/g, '<br/><br/>');
+        return (
+          <XMarkdown
+            paragraphTag="div"
+            components={{
+              think: ThinkComponent,
+            }}
+            className={className}
+            streaming={{
+              hasNextChunk: status === 'updating',
+              enableAnimation: true,
+            }}
+          >
+            {newContent}
+          </XMarkdown>
+        );
+      },
+    },
+    user: { placement: 'end' },
+  });
   const chatSide = (
     <div className={styles.side}>
       {/* 🌟 Logo */}
       <div className={styles.logo}>
         <img
-          src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*eco6RrQhxbMAAAAAAAAAAAAADgCCAQ/original"
+          src="/assets/logo.jpg"
           draggable={false}
           alt="logo"
-          width={24}
-          height={24}
+          width={60}
+          height={60}
         />
-        <span>Ai智能教育助手</span>
+        <span>AI扫地机器人助手</span>
       </div>
       {/* 🌟 会话管理 */}
       <Conversations
@@ -873,11 +846,11 @@ const Independent: React.FC = () => {
                     const newList = conversations.filter((item) => item.key !== conversation.key);
                     const newKey = newList?.[0]?.key;
                     setConversations(newList);
-                    
+
                     if (conversation.key === activeConversationKey) {
                       setActiveConversationKey(newKey);
                     }
-                    
+
                     messageApi.success('删除成功');
                   }
                 } catch (error) {
@@ -962,12 +935,10 @@ const Independent: React.FC = () => {
                 subItem: { padding: 0, background: 'transparent' },
               }}
               onItemClick={(info) => {
-                console.log(222)
                 onSubmit(info.data.description as string);
               }}
               className={styles.chatPrompt}
             />
-
             <Prompts
               items={[DESIGN_GUIDE]}
               styles={{
@@ -980,7 +951,6 @@ const Independent: React.FC = () => {
                 subItem: { background: '#ffffffa6' },
               }}
               onItemClick={(info) => {
-                console.log(111)
                 onSubmit(info.data.description as string);
               }}
               className={styles.chatPrompt}
@@ -1057,7 +1027,7 @@ const Independent: React.FC = () => {
         }
         loading={isRequesting}
         className={styles.sender}
-        allowSpeech
+        allowSpeech={isClient}
         placeholder={locale.askOrInputUseSkills}
       />
     </Flex>
@@ -1069,7 +1039,7 @@ const Independent: React.FC = () => {
     <XProvider locale={locale}>
       <ChatContext.Provider value={{ onReload, setMessage }}>
         {contextHolder}
-        <div className={styles.layout}>
+        <div className={styles.layout} suppressHydrationWarning>
           {chatSide}
           <div className={styles.chat}>
             {chatList}
