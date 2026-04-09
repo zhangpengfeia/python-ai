@@ -35,3 +35,4 @@ pyyaml
 
 # Gunicorn（生产环境部署推荐）
 gunicorn
+packaging
