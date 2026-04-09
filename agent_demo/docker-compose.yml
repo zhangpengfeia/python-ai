@@ -28,13 +28,13 @@ services:
       - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.token_authn.TokenAuthenticationServerProvider
       - CHROMA_SERVER_AUTHN_CREDENTIALS=admin
     ports:
-      - "8100:8000"
+      - "8100:8100"
     volumes:
       - chroma_data:/chroma/chroma
     networks:
       - agent_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      test: ["CMD", "curl", "-f", "http://localhost:8100/api/v2/heartbeat"]
       interval: 10s
       timeout: 5s
       retries: 5
