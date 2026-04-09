@@ -27,8 +27,8 @@ COPY --from=builder /install /usr/local
 
 # 安装curl用于健康检查（最小化安装）
 # 替换阿里云源，解决国内 apt 卡住
-RUN sed -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
-    sed -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
+RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources && \
+    sed -i 's|http://security.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources && \
     apt-get clean && \
     apt-get update -o Acquire::Check-Valid-Until=false && \
     apt-get install -y --no-install-recommends curl && \
