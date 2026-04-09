@@ -29,7 +29,7 @@ services:
     restart: always
     environment:
       CHROMA_SERVER_AUTH_PROVIDER: chromadb.auth.token_authn.TokenAuthServerProvider
-      CHROMA_SERVER_AUTH_CREDENTIALS: ${CHROMA_AUTH_TOKEN}  # 从.env读取
+      CHROMA_SERVER_AUTH_CREDENTIALS: admin  # 从.env读取
       CHROMA_SERVER_HOST: 0.0.0.0
       CHROMA_SERVER_PORT: 8000
     ports:
