@@ -1,14 +1,37 @@
 # 原有依赖
 langchain
 langchain-core
+langchain-community
+langchain-chroma
+langchain-text-splitters
+langchain-ollama
 chromadb
 python-dotenv
 cryptography
 requests
 pyjwt
 streamlit
-# 新增 FastAPI 相关
+
+# FastAPI 相关
 fastapi
 uvicorn[standard]
 pydantic
 python-multipart
+
+# 数据库驱动
+pymysql
+
+# 文档加载器
+pypdf
+
+# 阿里云通义千问
+dashscope
+
+# YAML 配置
+pyyaml
+
+# 日志（可选，Python 内置）
+# logging
+
+# Gunicorn（生产环境部署推荐）
+gunicorn
