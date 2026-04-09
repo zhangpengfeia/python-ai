@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.routes import chat, rag, tools
 from api.handlers import add_exception_handlers
 import uvicorn
+import os
 
 app = FastAPI(title="AI Agent API", version="1.0")
 
@@ -31,10 +32,23 @@ async def health_check():
 
 # 启动服务入口（必须添加）
 if __name__ == "__main__":
-    # 启动uvicorn Web服务，参数和命令行启动完全一致
-    uvicorn.run(
-        app="main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=False  # 开发环境开启热重载，生产环境必须改为False
-    )
+    # 从环境变量读取配置，支持 Docker 部署
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", 8200))
+    workers = int(os.getenv("WORKERS", 1))
+    reload = os.getenv("RELOAD", "false").lower() == "true"
+    
+    # 生产环境使用 gunicorn，开发环境使用 uvicorn
+    if workers > 1:
+        import multiprocessing
+        workers = min(workers, multiprocessing.cpu_count() * 2 + 1)
+        print(f"启动 Gunicorn + Uvicorn Workers: {workers} 个worker进程")
+        os.system(f"gunicorn main:app -k uvicorn.workers.UvicornWorker -b {host}:{port} --workers {workers} --timeout 120")
+    else:
+        print(f"启动 Uvicorn 开发服务器: {host}:{port}")
+        uvicorn.run(
+            app="main:app",
+            host=host,
+            port=port,
+            reload=reload
+        )

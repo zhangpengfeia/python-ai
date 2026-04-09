@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # 第二阶段：运行时镜像
-FROM python:3.12
+FROM python:3.12-slim
 
 WORKDIR /app
 
@@ -35,25 +35,25 @@ RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sourc
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
-# 创建非root用户运行应用（安全最佳实践）
-RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
-
-# 复制项目代码
+# 复制项目代码（在创建用户之前，避免权限问题）
 COPY . .
 
-# 创建必要的目录并设置权限
-RUN mkdir -p /app/logs /app/data /app/chroma_db && \
+# 创建必要的目录
+RUN mkdir -p /app/logs /app/data /app/chroma_db
+
+# 创建非root用户运行应用（安全最佳实践）
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser && \
     chown -R appuser:appuser /app
 
 # 切换到非root用户
 USER appuser
 
 # 暴露服务端口
-EXPOSE 8000
+EXPOSE 8200
 
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:8200/health || exit 1
 
-# 使用Gunicorn + Uvicorn Workers启动（生产环境推荐）
-CMD ["gunicorn", "main:app", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]
+# 使用 Uvicorn 直接启动（与 main.py 保持一致）
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8200", "--workers", "4"]

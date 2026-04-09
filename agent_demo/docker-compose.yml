@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: agent_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-your_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-agent_demo}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./config/crate_sql.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - agent_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ChromaDB 向量数据库
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: agent_chromadb
+    environment:
+      CHROMA_SERVER_HTTP_PORT: 8000
+      CHROMA_AUTH_TOKEN_TRANSPORT_HEADER: X-Chroma-Token
+      CHROMA_AUTH_CREDENTIALS: ${CHROMA_AUTH_TOKEN:-your_token}
+    ports:
+      - "8100:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks:
+      - agent_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # AI Agent 应用
+  app:
+    build: .
+    container_name: agent_app
+    ports:
+      - "8200:8200"
+    env_file:
+      - .env.docker
+    environment:
+      - MYSQL_HOST=mysql
+      - CHROMA_HOST=chromadb
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      mysql:
+        condition: service_healthy
+      chromadb:
+        condition: service_healthy
+    networks:
+      - agent_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  chroma_data:
+
+networks:
+  agent_network:
+    driver: bridge
