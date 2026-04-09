@@ -49,14 +49,14 @@ services:
       - .env.docker
     environment:
       - MYSQL_HOST=mysql
-      - CHROMA_HOST=chromadb
+      - CHROMA_HOST=chroma-server
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
     depends_on:
       mysql:
         condition: service_healthy
-      chromadb:
+      chroma-server:
         condition: service_healthy
     networks:
       - agent_network
