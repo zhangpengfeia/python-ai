@@ -1,28 +1,22 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from typing import Optional, Literal, List, Dict, Any
+from typing import Optional, Literal, List
 from agent.react_agent import ReactAgent
 from api.deps import get_agent
-from rag.chat_session import ChatSession
+from rag.chat_controller import ChatSession
 import json
 import logging
 from datetime import datetime
-
 # 配置日志
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 router = APIRouter()
-
-
 # ==================== 数据模型定义 ====================
-
 # 1. 定义消息结构
 class Message(BaseModel):
     role: Literal["user", "assistant", "system"] = Field(..., description="消息角色")
     content: str = Field(..., description="消息内容")
-
 
 # 2. 定义符合前端CustomInput要求的请求模型
 class CustomChatRequest(BaseModel):
@@ -31,16 +25,13 @@ class CustomChatRequest(BaseModel):
     model: Optional[str] = Field("qwen2.5-7b-instruct", description="模型名称")
     session_id: Optional[str] = Field(None, description="会话ID，不提供则自动创建新会话")
 
-
 # 3. 创建会话请求
 class CreateSessionRequest(BaseModel):
     session_name: Optional[str] = Field("新对话", description="会话名称")
 
-
 # 4. 重命名会话请求
 class RenameSessionRequest(BaseModel):
     session_name: str = Field(..., description="新的会话名称")
-
 
 # 5. 添加消息请求
 class AddMessageRequest(BaseModel):
@@ -49,24 +40,17 @@ class AddMessageRequest(BaseModel):
     content: str = Field(..., description="消息内容")
     use_rag: Optional[int] = Field(0, description="是否使用RAG，0或1")
     md5: Optional[str] = Field(None, description="消息MD5值")
-
-
 # ==================== 依赖注入 ====================
-
 def get_chat_session():
     """获取聊天会话管理器实例"""
     return ChatSession()
-
-
 # ==================== 会话管理接口 ====================
 
 @router.post("/session/create", summary="创建新会话")
 def create_session(request: CreateSessionRequest, session_manager: ChatSession = Depends(get_chat_session)):
     """
     创建一个新的聊天会话
-
     - **session_name**: 会话名称（可选，默认"新对话"）
-
     返回：
     - **session_id**: 新生成的会话ID
     - **session_name**: 会话名称
@@ -100,9 +84,7 @@ def list_sessions(
 ):
     """
     获取会话列表（按更新时间倒序）
-
     - **limit**: 返回数量限制（默认20）
-
     返回：
     - **sessions**: 会话列表
     """
@@ -129,10 +111,8 @@ def rename_session(
 ):
     """
     重命名指定会话
-
     - **session_id**: 会话ID（路径参数）
     - **session_name**: 新的会话名称
-
     返回：
     - **success**: 是否成功
     """
@@ -199,7 +179,6 @@ def add_message(
     - **content**: 消息内容
     - **use_rag**: 是否使用RAG（0或1）
     - **md5**: 消息MD5值（可选）
-
     返回：
     - **success**: 是否成功
     """
@@ -213,7 +192,6 @@ def add_message(
         )
         if not success:
             raise HTTPException(status_code=500, detail="保存消息失败")
-
         return {
             "code": 200,
             "message": "保存成功",
@@ -237,10 +215,8 @@ def get_message_history(
 ):
     """
     获取指定会话的历史消息
-
     - **session_id**: 会话ID（路径参数）
     - **limit**: 返回消息数量限制（默认50）
-
     返回：
     - **messages**: 消息列表（按时间正序）
     """
@@ -291,7 +267,6 @@ def clear_message_history(
 
 
 # ==================== 聊天接口 ====================
-
 @router.post("/stream", summary="流式对话接口")
 async def chat_stream(
         request: CustomChatRequest,
@@ -310,7 +285,6 @@ async def chat_stream(
         # 参数校验
         if not request.messages:
             raise HTTPException(status_code=400, detail="消息列表不能为空")
-
         # 获取最后一条用户消息
         last_user_message = None
         for msg in reversed(request.messages):
@@ -396,8 +370,6 @@ async def chat_stream(
         logger.error(f"接口初始化错误: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="服务器内部错误")
 
-
-
 @router.get("/history", summary="获取会话历史（兼容旧接口）")
 def get_history(
         session_id: str = "default",
@@ -405,8 +377,6 @@ def get_history(
         session_manager: ChatSession = Depends(get_chat_session)
 ):
     """
-    兼容旧版本的 history 接口
-
     - **session_id**: 会话ID
     - **limit**: 消息数量限制
     """

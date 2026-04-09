@@ -57,9 +57,8 @@ const zhCN = {
   aiMessage_1: `RICH 设计范式 \n [查看详情](/docs/spec/introduce-cn})`,
   aiMessage_2: `# 快速安装和导入组件 \n\n \`npm install @ant-design/x --save \` \n [查看详情](/components/introduce-cn/)\n \n\n <br />\n\n## 导入方式 \n\n \`\`\`tsx \n\n import { Bubble } from '@ant-design/x';\n\n \`\`\`\n\n ## 组件使用 \n\n \`\`\`tsx\n\n import React from 'react';\n\nimport { Bubble } from '@ant-design/x';\n\nconst App: React.FC = () => ( \n\n <div className="App"> \n\n  <Bubble content="Hello world!" />\n\n </div>\n\n  );\n\n export default App;`,
   welcome: `你好，我是 Ai智能教育助手 X`,
-  welcomeDescription: `基于蚂蚁设计，AGI 产品界面解决方案，打造更好的智能视觉~~`,
+  welcomeDescription: `我是你的专属AI扫地机器人智能助手，专注产品问题，解决方案，打造更好的产品体验`,
   aiCopilot: 'AI 助手',
-
   newSession: '新会话',
   writeAReport: '写报告',
   drawAPicture: '画图',

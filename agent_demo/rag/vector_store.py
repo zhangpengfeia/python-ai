@@ -2,6 +2,9 @@ import sys
 from pathlib import Path
 import pymysql
 
+from db.chroma_client import chroma_client
+from db.mysql_client import get_mysql_connection
+
 # 把agent_demo根目录加入搜索路径
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
@@ -14,22 +17,12 @@ from utils.config_handler import chroma_conf
 from utils.file_handler import txt_loader, pdf_loader, listdir_with_allowed_type, get_file_md5_hex
 from utils.logger_handler import logger
 from utils.path_tool import get_abs_path
-from utils.query_chroma import chroma_client
 
 # ====================== MySQL 配置 ======================
-DB_CONFIG = {
-    "host": "152.136.228.231",
-    "port": 3306,
-    "user": "root",
-    "password": "123456",
-    "database": "ai_agent",
-    "charset": "utf8mb4"
-}
-
 class MySQLMD5Store:
     """MD5 存储替换为 MySQL"""
     def __init__(self):
-        self.conn = pymysql.connect(**DB_CONFIG)
+        self.conn = get_mysql_connection()
         self.conn.autocommit(True)
 
     def exists(self, md5_hex: str) -> bool:

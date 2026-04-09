@@ -4,7 +4,7 @@ from pathlib import Path
 # 把agent_demo根目录加入搜索路径
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
-from chat_session import ChatSession
+from rag.chat_controller import ChatSession
 from vector_store import VectorStoreService
 
 # 初始化

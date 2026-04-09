@@ -1,22 +1,12 @@
 import uuid
 import pymysql
 from datetime import datetime
+
+from db.mysql_client import get_mysql_connection
 from utils.logger_handler import logger
-
-# MySQL 配置（跟你 vector_store 一致）
-DB_CONFIG = {
-    "host": "152.136.228.231",
-    "port": 3306,
-    "user": "root",
-    "password": "123456",
-    "database": "ai_agent",
-    "charset": "utf8mb4"
-}
-
-
 class ChatSession:
     def __init__(self):
-        self.conn = pymysql.connect(**DB_CONFIG)
+        self.conn = get_mysql_connection()
         self.conn.autocommit(True)
 
     # ==================== 会话相关 ====================

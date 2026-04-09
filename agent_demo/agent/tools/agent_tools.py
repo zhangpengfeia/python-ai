@@ -8,6 +8,7 @@ from utils.logger_handler import logger
 from utils.path_tool import get_abs_path
 from agent.tools.api_user_location import api_city
 from agent.tools.api_weather import api_weather
+from datetime import datetime
 
 rag = RagSummarizeService()
 external_data = {}
@@ -34,7 +35,7 @@ def get_user_id() -> str:
 
 @tool(description="获取用户当前月份，字符串形式返回")
 def get_current_month() -> str:
-    return "5月"
+    return datetime.now().strftime("%Y-%m")
 
 def generate_external_data():
     if not external_data:
@@ -73,5 +74,5 @@ def fill_context_for_report():
 
 
 if __name__ == "__main__":
-    print(getch_external_data("1001", "2025-01"))
+    print(fetch_external_data("1001", "2025-01"))
 

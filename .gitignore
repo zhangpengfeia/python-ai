@@ -46,13 +46,14 @@ env/
 .pytest_cache/
 .coverage
 htmlcov/
-
+.env
 
 # ==================== 数据库 ====================
 *.db
 *.sqlite
 *.sqlite3
 *.dump
+.env
 
 # ==================== 日志文件 ====================
 logs/

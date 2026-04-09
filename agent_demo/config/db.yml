@@ -1,0 +1,17 @@
+# MySQL 数据库配置
+mysql:
+  host: "${MYSQL_HOST}"
+  port: "${MYSQL_PORT:3306}"  # 冒号后为默认值
+  user: "${MYSQL_USER}"
+  password: "${MYSQL_PASSWORD}"
+  database: "${MYSQL_DATABASE}"
+  charset: "utf8mb4"
+  autocommit: true
+
+# ChromaDB 向量数据库配置
+chroma:
+  host: "${CHROMA_HOST}"
+  port: "${CHROMA_PORT:8100}"
+  auth_provider: "chromadb.auth.token_authn.TokenAuthClientProvider"
+  auth_credentials: "${CHROMA_AUTH_TOKEN}"
+  collection_name: "rag_knowledge"
