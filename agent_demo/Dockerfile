@@ -26,7 +26,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY --from=builder /install /usr/local
 
 # 安装curl用于健康检查（最小化安装）
-RUN apt-get update && \
+# 替换阿里云源，解决国内 apt 卡住
+RUN sed -i "s/deb.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
+    sed -i "s/security.debian.org/mirrors.aliyun.com/g" /etc/apt/sources.list && \
+    apt-get clean && \
+    apt-get update -o Acquire::Check-Valid-Until=false && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
