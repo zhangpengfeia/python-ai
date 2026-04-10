@@ -74,6 +74,14 @@ interface CustomOutput {
     }[];
   };
 }
+
+interface TransformMessageInfo {
+  originMessage?: ChatMessage;
+  chunk?: {
+    data?: string;
+  };
+}
+
 // ==================== Type ====================
 interface ChatMessage extends CustomMessage {
   extraInfo?: {
@@ -312,6 +320,7 @@ const ThinkComponent = React.memo((props: ComponentProps) => {
     </Think>
   );
 });
+ThinkComponent.displayName = 'ThinkComponent';
 
 // 自定义Provider实现：继承AbstractChatProvider实现自定义聊天逻辑
 class CustomProvider<
@@ -571,7 +580,7 @@ const Independent: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
 
   const listRef = useRef<BubbleListRef>(null);
-  const senderRef = useRef<GetProp<typeof Sender>>(null);
+  const senderRef = useRef<any>(null);
   // 检测是否在客户端环境
   const [isClient, setIsClient] = useState(false);
   
@@ -646,7 +655,7 @@ const Independent: React.FC = () => {
   extraInfo?: ChatMessage['extraInfo'];
 }> = ({ id, content, extraInfo, status }) => {
       const lastAssistant = [...messages].reverse().find(i=>i.message?.role==='assistant')
-      const isLastMessage = lastAssistant.id == id && lastAssistant.status == status
+      const isLastMessage = lastAssistant && lastAssistant.id != null && String(lastAssistant.id) === String(id) && lastAssistant.status === status
       const context = React.useContext(ChatContext);
       const Items = [
         {
@@ -795,13 +804,14 @@ const Independent: React.FC = () => {
               icon: <EditOutlined />,
               onClick: async () => {
                 try {
+                  const currentLabel = typeof conversation.label === 'string' ? conversation.label : '';
                   const response = await fetch(`http://152.136.228.231:8200/api/v1/chat/session/${conversation.key}/rename`, {
                     method: 'PUT',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      session_name: conversation.label.replace(/^\[.*?\]/, ''), // 移除前缀标签
+                      session_name: currentLabel.replace(/\[.*?\]/, ''), // 移除前缀标签
                     }),
                   });
 
