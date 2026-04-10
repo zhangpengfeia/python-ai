@@ -3,15 +3,13 @@ FROM node:22.8.0-alpine AS base
 
 # 安装依赖阶段
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc-compat
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml* ./
 
-# 👉 终极修复：跳过 corepack 签名校验 + 直接使用 pnpm
-RUN corepack enable && \
-    # 关键：关闭 corepack 签名验证（解决报错）
-    export COREPACK_ENABLE_STRICT=0 && \
+# 👉 终极修复：直接用 npm 安装 pnpm，完全绕过坏掉的 corepack
+RUN npm install -g pnpm && \
     pnpm config set registry https://registry.npmmirror.com/ && \
     pnpm i --frozen-lockfile
 
@@ -22,7 +20,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN corepack enable && export COREPACK_ENABLE_STRICT=0 && pnpm build
+
+# 同样直接用 npm 装 pnpm，不碰 corepack
+RUN npm install -g pnpm && pnpm build
 
 # 生产运行阶段
 FROM base AS runner
