@@ -8,12 +8,12 @@ WORKDIR /app
 # 配置国内pip镜像源（腾讯云），加速依赖下载
 RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple/ \
     && pip install --upgrade pip setuptools wheel
-
-# 先安装 packaging（解决 langchain-core 的依赖问题）
-RUN pip install --no-cache-dir packaging
 # 再安装其他依赖
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# 先安装 packaging（解决 langchain-core 的依赖问题）
+RUN pip install packaging
 
 # 第二阶段：运行时镜像
 FROM python:3.13-slim
