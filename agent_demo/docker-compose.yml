@@ -36,6 +36,8 @@ services:
       dockerfile: Dockerfile
     container_name: ai_app
     restart: always
+    env_file:
+      - .env.docker
     ports:
       - "8200:8200"
     volumes:

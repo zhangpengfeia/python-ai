@@ -122,6 +122,6 @@ if __name__ == '__main__':
     print(rag_conf["chat_model_name"])
     print(db_conf["mysql"]["host"])
     print(db_conf["chroma"]["host"])
-    print(f"MySQL 密码已加载: {'*' * len(str(db_conf['mysql']['password']))}")
+    print(f"MySQL 密码已加载: {db_conf['mysql']['password']}")
     print(f"密码类型: {type(db_conf['mysql']['password'])}")
     print(f"端口类型: {type(db_conf['mysql']['port'])}")
