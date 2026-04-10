@@ -3,17 +3,16 @@ FROM node:22.8.0-alpine AS base
 
 # 安装依赖阶段
 FROM base AS deps
-# 👉 修复：正确包名 + 国内镜像加速
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
     apk add --no-cache libc6-compat
 
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 
-# 👉 彻底抛弃坏的 corepack，用 npm 直接安装 pnpm
+# 👉 修复：不使用锁文件，直接安装（最稳妥）
 RUN npm install -g pnpm && \
     pnpm config set registry https://registry.npmmirror.com/ && \
-    pnpm i --frozen-lockfile
+    pnpm i
 
 # 构建阶段
 FROM base AS builder
