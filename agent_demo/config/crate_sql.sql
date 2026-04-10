@@ -1,3 +1,4 @@
+create database ai_agent;
 USE ai_agent;
 
 SET NAMES utf8mb4;

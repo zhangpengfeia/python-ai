@@ -50,6 +50,19 @@ services:
       - chroma-server
     networks:
       - ai_network
+  nginx:
+    image: nginx:alpine
+    container_name: ai_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d:ro
+    restart: always
+    depends_on:
+      - app
+    networks:
+      - ai_network
+
 volumes:
   mysql_data:
   chroma_data:
