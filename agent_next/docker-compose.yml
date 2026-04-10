@@ -7,14 +7,14 @@ services:
     container_name: agent_next_app
     restart: always
     ports:
-      - "8300:8300"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-      - PORT=8300
+      - PORT=3000
     volumes:
       - ./logs:/app/logs
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8300"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
