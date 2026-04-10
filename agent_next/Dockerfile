@@ -1,4 +1,3 @@
-NEW_FILE_CODE
 # 使用 Node.js 20 作为基础镜像（根据你的环境配置）
 FROM node:22.8.0-alpine AS base
 
