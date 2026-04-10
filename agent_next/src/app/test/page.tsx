@@ -582,7 +582,7 @@ const Independent: React.FC = () => {
   const listRef = useRef<BubbleListRef>(null);
   const senderRef = useRef<any>(null);
   // 检测是否在客户端环境
-  const [isClient, setIsClient] = useState(false);bv
+  const [isClient, setIsClient] = useState(false);
   
   React.useEffect(() => {
     setIsClient(true);
