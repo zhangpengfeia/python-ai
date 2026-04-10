@@ -11,6 +11,7 @@ cryptography
 requests
 pyjwt
 streamlit
+packaging
 
 # FastAPI 相关
 fastapi
