@@ -1,71 +1,50 @@
+networks:
+  ai_network:
+    driver: bridge
+
 services:
-  # MySQL 数据库
   mysql:
     image: mysql:8.0
-    container_name: agent_mysql
+    container_name: ai_mysql
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-your_password}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-agent_demo}
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ai_agent
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./config/crate_sql.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - agent_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ai_network
 
-  # ChromaDB 向量数据库
   chroma-server:
     image: chromadb/chroma:latest
-    container_name: agent_chromadb
+    container_name: ai_chroma
+    ports:
+      - "8100:8000"
     environment:
       - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.token_authn.TokenAuthenticationServerProvider
       - CHROMA_SERVER_AUTHN_CREDENTIALS=admin
-    ports:
-      - "8100:8100"
+    restart: always
     volumes:
       - chroma_data:/chroma/chroma
     networks:
-      - agent_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8100/api/v2/heartbeat"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # AI Agent 应用
+      - ai_network
   app:
-    build: .
-    container_name: agent_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_app
+    restart: always
     ports:
       - "8200:8200"
-    env_file:
-      - .env.docker
-    environment:
-      - MYSQL_HOST=mysql
-      - CHROMA_HOST=chroma-server
     volumes:
-      - ./logs:/app/logs
-      - ./data:/app/data
-    depends_on:
-      mysql:
-        condition: service_healthy
-      chroma-server:
-        condition: service_healthy
+      - app_logs:/app/logs
+      - app_data:/app/data
+      - ./config:/app/config:ro
+      - ./prompts:/app/prompts:ro
     networks:
-      - agent_network
-    restart: unless-stopped
-
+      - ai_network
 volumes:
   mysql_data:
   chroma_data:
-
-networks:
-  agent_network:
-    driver: bridge

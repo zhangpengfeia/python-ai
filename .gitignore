@@ -61,6 +61,7 @@ logs/
 log/
 
 # ==================== IDE 和编辑器 ====================
+.idea
 .idea/
 .vscode/
 *.sublime-project
