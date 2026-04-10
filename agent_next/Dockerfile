@@ -1,10 +1,5 @@
-# 使用 Node.js 22.8.0 作为基础镜像
+# 使用 Node.js 20 作为基础镜像（根据你的环境配置）
 FROM node:22.8.0-alpine AS base
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# 设置 pnpm 镜像源为国内镜像
-ENV PNPM_REGISTRY=https://registry.npmmirror.com
 
 # 安装依赖阶段
 FROM base AS deps
@@ -14,9 +9,8 @@ WORKDIR /app
 # 复制 package.json 和 lock 文件
 COPY package.json pnpm-lock.yaml* ./
 
-# 使用国内镜像源安装依赖
-RUN pnpm config set registry https://registry.npmmirror.com && \
-    pnpm i --frozen-lockfile
+# 如果使用 pnpm
+RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
 # 构建阶段
 FROM base AS builder
@@ -26,11 +20,9 @@ COPY . .
 
 # 设置环境变量
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PNPM_REGISTRY=https://registry.npmmirror.com
 
 # 构建应用
-RUN pnpm config set registry https://registry.npmmirror.com && \
-    pnpm build
+RUN corepack enable pnpm && pnpm build
 
 # 生产运行阶段
 FROM base AS runner
