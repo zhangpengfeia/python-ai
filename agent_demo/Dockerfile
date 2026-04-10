@@ -1,4 +1,6 @@
 # 多阶段构建 - 优化依赖安装和镜像体积
+
+# 第一阶段：构建依赖
 FROM python:3.13-slim AS builder
 
 WORKDIR /app
@@ -10,8 +12,21 @@ RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simpl
 # 先复制依赖文件并安装（利用Docker缓存层）
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# 第二阶段：运行时镜像
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# 设置环境变量
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    ENVIRONMENT=production
+
 # 从builder阶段复制已安装的依赖
 COPY --from=builder /install /usr/local
+
 # 安装curl用于健康检查（最小化安装）
 # 替换阿里云源，解决国内 apt 卡住
 RUN sed -i 's|http://deb.debian.org|https://mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources && \
