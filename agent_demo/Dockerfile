@@ -9,7 +9,10 @@ WORKDIR /app
 RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple/ \
     && pip install --upgrade pip setuptools wheel
 
-# 先复制依赖文件并安装（利用Docker缓存层）
+# 先安装 packaging（解决 langchain-core 的依赖问题）
+RUN pip install --no-cache-dir --prefix=/install packaging
+
+# 再安装其他依赖
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
