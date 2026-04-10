@@ -6,8 +6,8 @@ FROM python:3.13-slim AS builder
 WORKDIR /app
 
 # 配置国内pip镜像源（腾讯云），加速依赖下载
-#RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple/ \
-#    && pip install --upgrade pip setuptools wheel
+RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple/ \
+    && pip install --upgrade pip setuptools wheel
 
 # 先安装 packaging（解决 langchain-core 的依赖问题）
 RUN pip install --no-cache-dir packaging
