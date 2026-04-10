@@ -43,8 +43,13 @@ services:
       - app_data:/app/data
       - ./config:/app/config:ro
       - ./prompts:/app/prompts:ro
+    depends_on:
+      - mysql
+      - chroma-server
     networks:
       - ai_network
 volumes:
   mysql_data:
   chroma_data:
+  app_logs:
+  app_data:
