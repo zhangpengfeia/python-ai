@@ -1,7 +1,7 @@
 # 多阶段构建 - 优化依赖安装和镜像体积
 
 # 第一阶段：构建依赖
-FROM python:3.13-slim AS builder
+FROM python:3.13.12-slim AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # 第二阶段：运行时镜像
-FROM python:3.13-slim
+FROM python:3.13.12-slim
 
 WORKDIR /app
 
