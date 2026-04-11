@@ -1024,10 +1024,12 @@ const Independent: React.FC = () => {
   const chatSender = (
     <Flex
       vertical
-      gap={12}
+      gap={8}
       align="center"
       style={{
-        margin: 8,
+        margin: '4px 8px 8px 8px',
+        flexShrink: 0,
+        paddingBottom: 'env(safe-area-inset-bottom, 8px)',
       }}
     >
       {/* 🌟 提示词 */}
