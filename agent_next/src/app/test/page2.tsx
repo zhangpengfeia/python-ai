@@ -1,12 +1,10 @@
 "use client"
 import {
-  AppstoreAddOutlined,
   CloudUploadOutlined,
   CommentOutlined,
   DeleteOutlined,
   EditOutlined,
   EllipsisOutlined,
-  FileSearchOutlined,
   GlobalOutlined,
   HeartOutlined,
   MenuFoldOutlined,
@@ -41,15 +39,14 @@ import {
   XRequest,
   AbstractChatProvider, DefaultMessageInfo, XRequestOptions
 } from '@ant-design/x-sdk';
-import {Avatar, Button, Dropdown, Flex, type GetProp, Input, message, Modal, Pagination, Space} from 'antd';
-import { createStyles } from 'antd-style';
-import dayjs from 'dayjs';
-import React, {useEffect, useRef, useState} from 'react';
+import {Avatar, Button,  Flex, type GetProp, Input, message, Modal, Pagination, Space} from 'antd';
+import React, {useRef, useState} from 'react';
 import '@ant-design/x-markdown/themes/light.css';
 import '@ant-design/x-markdown/themes/dark.css';
 import { BubbleListRef } from '@ant-design/x/es/bubble';
 import { useMarkdownTheme } from './Xmarkdown/utils';
 import locale from '@/app/utils/locale';
+import styles from './styles.module.css';
 
 
 // 类型定义：自定义聊天系统的输入输出和消息结构
@@ -96,192 +93,6 @@ interface CustomMessage extends XModelMessage{
   role: 'user' | 'assistant' | 'system';
 }
 
-// ==================== Style ====================
-const useStyle = createStyles(({ token, css }) => {
-  return {
-    layout: css`
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      background: ${token.colorBgContainer};
-      font-family: AlibabaPuHuiTi, ${token.fontFamily}, sans-serif;
-      position: relative;
-    `,
-    header: css`
-      height: 56px;
-      background: ${token.colorBgContainer};
-      border-bottom: 1px solid ${token.colorBorderSecondary};
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      box-sizing: border-box;
-      flex-shrink: 0;
-    `,
-    headerLeft: css`
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    `,
-    headerTitle: css`
-      font-size: 18px;
-      font-weight: 600;
-      color: ${token.colorText};
-      margin: 0;
-      white-space: nowrap;
-    `,
-    headerRight: css`
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    `,
-    mainContent: css`
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    `,
-    chatWrapper: css`
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    `,
-    // side 样式
-    side: css`
-      background: ${token.colorBgLayout};
-      width: 280px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: 0 12px;
-      box-sizing: border-box;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 100;
-      
-      &.collapsed {
-        width: 0;
-        padding: 0;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-      
-      &.mobile-overlay {
-        position: fixed;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        z-index: 1000;
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-      }
-    `,
-    overlay: css`
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.45);
-      z-index: 999;
-      transition: opacity 0.3s ease;
-    `,
-    logo: css`
-      display: flex;
-      align-items: center;
-      justify-content: start;
-      padding: 0 24px;
-      box-sizing: border-box;
-      gap: 8px;
-      margin: 24px 0;
-      white-space: nowrap;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-
-      span {
-        font-weight: bold;
-        color: ${token.colorText};
-        font-size: 16px;
-      }
-    `,
-    conversations: css`
-      overflow-y: auto;
-      margin-top: 12px;
-      padding: 0;
-      flex: 1;
-      .ant-conversations-list {
-        padding-inline-start: 0;
-      }
-    `,
-    sideFooter: css`
-      border-top: 1px solid ${token.colorBorderSecondary};
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    `,
-    // chat list 样式
-    chat: css`
-      flex: 1;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      
-      .ant-bubble-content-updating {
-        background-image: linear-gradient(90deg, #ff6b23 0%, #af3cb8 31%, #53b6ff 89%);
-        background-size: 100% 2px;
-        background-repeat: no-repeat;
-        background-position: bottom;
-      }
-    `,
-    chatPrompt: css`
-      .ant-prompts-label {
-        color: #000000e0 !important;
-      }
-      .ant-prompts-desc {
-        color: #000000a6 !important;
-        width: 100%;
-      }
-      .ant-prompts-icon {
-        color: #000000a6 !important;
-      }
-    `,
-    chatList: css`
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-    `,
-    placeholder: css`
-      width: 100%;
-      padding: ${token.paddingLG}px;
-      box-sizing: border-box;
-    `,
-    // sender 样式
-    sender: css`
-      width: 100%;
-      max-width: 840px;
-    `,
-    speechButton: css`
-      font-size: 18px;
-      color: ${token.colorText} !important;
-    `,
-    senderPrompt: css`
-      width: 100%;
-      max-width: 840px;
-      margin: 0 auto;
-      color: ${token.colorText};
-    `,
-  };
-});
 // ==================== Static Config ====================
 // 热门话题
 const HOT_TOPICS = {
@@ -527,7 +338,6 @@ const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMe
 };
 
 const Independent: React.FC = () => {
-  const { styles } = useStyle();
   // ==================== State ====================
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
@@ -593,8 +403,8 @@ const Independent: React.FC = () => {
     addConversation,
     setConversations,
   } = useXConversations({
-    defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
-    defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
+    // defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
+    // defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
   });
 
   const [className] = useMarkdownTheme();
@@ -933,7 +743,7 @@ const Independent: React.FC = () => {
   });
   const chatSide = (
     <div
-      className={`${styles.side}${isSidebarCollapsed ? ' collapsed' : ''}${isMobile && !isSidebarCollapsed ? ' mobile-overlay' : ''}`}
+      className={`${styles.side}${isSidebarCollapsed ? ` ${styles.collapsed}` : ''}${isMobile && !isSidebarCollapsed ? ` ${styles.mobileOverlay}` : ''}`}
       style={{
         width: isSidebarCollapsed ? '0' : undefined,
         padding: isSidebarCollapsed ? '0' : undefined,
@@ -942,7 +752,7 @@ const Independent: React.FC = () => {
       {!isSidebarCollapsed && (
         <>
           {/* 🌟 Logo */}
-          <div className={styles.logo}>
+          <div  className={styles.logo}>
             <img
               src="/assets/logo.jpg"
               draggable={false}
@@ -1004,11 +814,9 @@ const Independent: React.FC = () => {
                         const newList = conversations.filter((item) => item.key !== conversation.key);
                         const newKey = newList?.[0]?.key;
                         setConversations(newList);
-
                         if (conversation.key === activeConversationKey) {
                           setActiveConversationKey(newKey);
                         }
-
                         messageApi.success('删除成功');
                       }
                     } catch (error) {
@@ -1186,6 +994,7 @@ const Independent: React.FC = () => {
             item: { padding: '6px 12px' },
           }}
           className={styles.senderPrompt}
+
         />
       )}
       {/* 🌟 输入框 */}
@@ -1245,19 +1054,20 @@ const Independent: React.FC = () => {
       <ChatContext.Provider value={{ onReload, setMessage }}>
         {contextHolder}
         {renameModal}
-        <div className={styles.layout} suppressHydrationWarning>
+        <div  className={styles.layout} suppressHydrationWarning style={isClient ? undefined : { opacity: 0 }}>
           {chatSide}
           {isMobile && !isSidebarCollapsed && (
-            <div className={styles.overlay} onClick={handleOverlayClick} />
+            <div className={styles.overlay}  onClick={handleOverlayClick} />
           )}
-          <div className={styles.chatWrapper}>
+          <div  className={styles.chatWrapper} >
             {header}
-            <div className={styles.chat}>
+            <div  className={styles.chat}>
               {chatList}
               {chatSender}
             </div>
           </div>
         </div>
+
       </ChatContext.Provider>
     </XProvider>
   );
