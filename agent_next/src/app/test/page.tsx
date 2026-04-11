@@ -342,6 +342,9 @@ const Independent: React.FC = () => {
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [loadingProgress, setLoadingProgress] = React.useState(0);
+  const [loadingText, setLoadingText] = React.useState('正在初始化...');
 
   // 监听窗口大小变化，当屏幕宽度小于680px时自动折叠侧边栏
   React.useEffect(() => {
@@ -362,6 +365,50 @@ const Independent: React.FC = () => {
     // 清理函数
     return () => {
       window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // 首屏加载动画控制
+  React.useEffect(() => {
+    let progress = 0;
+    const loadingSteps = [
+      { threshold: 20, text: '正在连接服务器...' },
+      { threshold: 40, text: '正在加载会话列表...' },
+      { threshold: 60, text: '正在初始化聊天环境...' },
+      { threshold: 80, text: '正在准备就绪...' },
+      { threshold: 100, text: '加载完成' },
+    ];
+    let currentStep = 0;
+
+    const progressInterval = setInterval(() => {
+      if (progress < 95) {
+        progress += Math.random() * 3 + 1;
+        if (progress > 95) progress = 95;
+        
+        // 更新加载文本
+        if (currentStep < loadingSteps.length - 1 && progress >= loadingSteps[currentStep].threshold) {
+          setLoadingText(loadingSteps[currentStep].text);
+          currentStep++;
+        }
+        
+        setLoadingProgress(Math.min(progress, 95));
+      }
+    }, 100);
+
+    // 模拟加载完成
+    const loadTimer = setTimeout(() => {
+      clearInterval(progressInterval);
+      setLoadingProgress(100);
+      setLoadingText('加载完成');
+      
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 300);
+    }, 2000);
+
+    return () => {
+      clearInterval(progressInterval);
+      clearTimeout(loadTimer);
     };
   }, []);
 
@@ -1049,19 +1096,52 @@ const Independent: React.FC = () => {
 
   // ==================== Render =================
 
+  // 加载动画组件
+  const LoadingScreen = () => (
+    <div className={`${styles.loadingContainer}${!isLoading ? ` ${styles.loadingFadeOut}` : ''}`}>
+      <div className={styles.loadingContent}>
+        <div className={styles.loadingLogo}>
+          <img
+            src="/assets/logo.jpg"
+            draggable={false}
+            alt="logo"
+          />
+          <span>AI扫地机器人助手</span>
+        </div>
+        
+        <div className={styles.progressBarContainer}>
+          <div className={styles.progressBarTrack}>
+            <div 
+              className={styles.progressBarFill}
+              style={{ width: `${loadingProgress}%` }}
+            />
+          </div>
+          <div className={styles.progressText}>
+            {Math.round(loadingProgress)}%
+          </div>
+        </div>
+        
+        <div className={styles.loadingTips}>
+          {loadingText}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <XProvider locale={locale}>
       <ChatContext.Provider value={{ onReload, setMessage }}>
         {contextHolder}
         {renameModal}
-        <div  className={styles.layout} suppressHydrationWarning style={isClient ? undefined : { opacity: 0 }}>
+        {LoadingScreen()}
+        <div className={styles.layout} suppressHydrationWarning style={isClient ? undefined : { opacity: 0 }}>
           {chatSide}
           {isMobile && !isSidebarCollapsed && (
-            <div className={styles.overlay}  onClick={handleOverlayClick} />
+            <div className={styles.overlay} onClick={handleOverlayClick} />
           )}
-          <div  className={styles.chatWrapper} >
+          <div className={styles.chatWrapper}>
             {header}
-            <div  className={styles.chat}>
+            <div className={styles.chat}>
               {chatList}
               {chatSender}
             </div>
