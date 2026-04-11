@@ -621,11 +621,8 @@ const Independent: React.FC = () => {
       }));
       setConversations(conversations);
       // 设置默认激活的会话
-      if (conversations.length > 0) {
-        // 如果当前激活的会话不在新列表中，或者还没有激活会话，则激活第一个
-        if (!activeConversationKey || !conversations.find(c => c.key === activeConversationKey)) {
-          setActiveConversationKey(conversations[0].key);
-        }
+      if (conversations.length > 0 && !activeConversationKey) {
+        setActiveConversationKey(conversations[0].key);
       }
       return conversations;
     }
