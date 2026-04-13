@@ -816,7 +816,7 @@ const Independent: React.FC = () => {
             }}
             items={conversations.map(({ key, label, ...other }) => ({
               key,
-              label: isClient && key === activeConversationKey ? `[${locale.curConversation}]${label}` : label,
+              label: key === activeConversationKey ? `[${locale.curConversation}]${label}` : label,
               ...other,
             }))}
             className={styles.conversations}
@@ -901,10 +901,7 @@ const Independent: React.FC = () => {
           }}
         />
         <h1 className={styles.headerTitle}>
-          {isClient
-            ? (conversations.find(c => c.key === activeConversationKey)?.label || 'AI扫地机器人助手')
-            : 'AI扫地机器人助手'
-          }
+          {conversations.find(c => c.key === activeConversationKey)?.label || 'AI扫地机器人助手'}
         </h1>
       </Flex>
     </div>
@@ -1070,14 +1067,14 @@ const Independent: React.FC = () => {
         }
         loading={isRequesting}
         className={styles.sender}
-        allowSpeech={isClient}
+        allowSpeech
         placeholder={locale.askOrInputUseSkills}
       />
     </Flex>
   );
 
   // 重命名弹窗
-  const renameModal = isClient ? (
+  const renameModal = (
     <Modal
       title="重命名会话"
       open={renameModalOpen}
@@ -1096,7 +1093,7 @@ const Independent: React.FC = () => {
         />
       </div>
     </Modal>
-  ) : null;
+  );
 
   // ==================== Render =================
 
@@ -1138,7 +1135,7 @@ const Independent: React.FC = () => {
         {contextHolder}
         {renameModal}
         {LoadingScreen()}
-        <div className={styles.layout} suppressHydrationWarning style={isClient ? undefined : { opacity: 0 }}>
+        <div className={styles.layout} suppressHydrationWarning>
           {chatSide}
           {isMobile && !isSidebarCollapsed && (
             <div className={styles.overlay} onClick={handleOverlayClick} />
