@@ -182,8 +182,8 @@ const THOUGHT_CHAIN_CONFIG = {
 const DEFAULT_CONVERSATIONS_ITEMS = [
   {
     key: 'default-0',
-    label: "新对话",
-    group: "今天",
+    label: "默认会话",
+    group: "默认会话",
   },
 ];
 
@@ -450,8 +450,8 @@ const Independent: React.FC = () => {
     addConversation,
     setConversations,
   } = useXConversations({
-    // defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
-    // defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
+    defaultConversations: DEFAULT_CONVERSATIONS_ITEMS,
+    defaultActiveConversationKey: DEFAULT_CONVERSATIONS_ITEMS[0].key,
   });
 
   const [className] = useMarkdownTheme();
@@ -816,7 +816,7 @@ const Independent: React.FC = () => {
             }}
             items={conversations.map(({ key, label, ...other }) => ({
               key,
-              label: key === activeConversationKey ? `[${locale.curConversation}]${label}` : label,
+              label: isClient && key === activeConversationKey ? `[${locale.curConversation}]${label}` : label,
               ...other,
             }))}
             className={styles.conversations}
@@ -832,6 +832,7 @@ const Independent: React.FC = () => {
                   label: locale.rename,
                   key: 'rename',
                   icon: <EditOutlined />,
+                  disabled: conversation.key === 'default-0',
                   onClick: () => {
                     handleOpenRenameModal(conversation);
                   },
@@ -841,6 +842,7 @@ const Independent: React.FC = () => {
                   key: 'delete',
                   icon: <DeleteOutlined />,
                   danger: true,
+                  disabled: conversation.key === 'default-0',
                   onClick: async () => {
                     try {
                       // 调用后端删除接口

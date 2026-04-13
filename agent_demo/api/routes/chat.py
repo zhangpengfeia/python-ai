@@ -117,6 +117,10 @@ def rename_session(
     - **success**: 是否成功
     """
     try:
+        # 保护默认会话，不可重命名
+        if session_id == "default-0":
+            raise HTTPException(status_code=403, detail="默认会话不可重命名")
+        
         success = session_manager.rename_session(session_id, request.session_name)
         if not success:
             raise HTTPException(status_code=500, detail="重命名失败")
@@ -148,6 +152,10 @@ def delete_session(
     - **success**: 是否成功
     """
     try:
+        # 保护默认会话，不可删除
+        if session_id == "default-0":
+            raise HTTPException(status_code=403, detail="默认会话不可删除")
+        
         # 删除会话记录及其所有消息
         success = session_manager.delete_session(session_id)
         if not success:
