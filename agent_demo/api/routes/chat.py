@@ -1,61 +1,65 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from typing import Optional, Literal, List
+from typing import Optional, Literal, List, Union
 from agent.react_agent import ReactAgent
 from api.deps import get_agent
 from rag.chat_controller import ChatSession
 import json
 import logging
 from datetime import datetime
-# 配置日志
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 router = APIRouter()
-# ==================== 数据模型定义 ====================
-# 1. 定义消息结构
-class Message(BaseModel):
-    role: Literal["user", "assistant", "system"] = Field(..., description="消息角色")
-    content: str = Field(..., description="消息内容")
 
-# 2. 定义符合前端CustomInput要求的请求模型
+# ==================== 数据模型定义 ====================
+
+class TextContent(BaseModel):
+    """文本内容"""
+    type: Literal["text"] = "text"
+    text: str = Field(..., description="文本内容")
+
+class ImageContent(BaseModel):
+    """图片内容"""
+    type: Literal["image"] = "image"
+    image_url: str = Field(..., description="图片URL地址")
+    description: Optional[str] = Field(None, description="图片描述")
+
+ContentItem = Union[TextContent, ImageContent]
+
+class Message(BaseModel):
+    """消息结构，支持文本和图片混合内容"""
+    role: Literal["user", "assistant", "system"] = Field(..., description="消息角色")
+    content: Union[str, List[ContentItem]] = Field(..., description="消息内容，可以是纯文本或图文混合")
+
 class CustomChatRequest(BaseModel):
     messages: List[Message] = Field(..., description="消息列表，包含完整的对话历史")
     stream: Optional[bool] = Field(True, description="是否启用流式输出")
     model: Optional[str] = Field("qwen2.5-7b-instruct", description="模型名称")
     session_id: Optional[str] = Field(None, description="会话ID，不提供则自动创建新会话")
 
-# 3. 创建会话请求
 class CreateSessionRequest(BaseModel):
     session_name: Optional[str] = Field("新对话", description="会话名称")
 
-# 4. 重命名会话请求
 class RenameSessionRequest(BaseModel):
     session_name: str = Field(..., description="新的会话名称")
 
-# 5. 添加消息请求
 class AddMessageRequest(BaseModel):
     session_id: str = Field(..., description="会话ID")
     role: Literal["user", "assistant"] = Field(..., description="消息角色")
-    content: str = Field(..., description="消息内容")
+    content: Union[str, List[ContentItem]] = Field(..., description="消息内容")
     use_rag: Optional[int] = Field(0, description="是否使用RAG，0或1")
     md5: Optional[str] = Field(None, description="消息MD5值")
-# ==================== 依赖注入 ====================
+
 def get_chat_session():
     """获取聊天会话管理器实例"""
     return ChatSession()
+
 # ==================== 会话管理接口 ====================
 
 @router.post("/session/create", summary="创建新会话")
 def create_session(request: CreateSessionRequest, session_manager: ChatSession = Depends(get_chat_session)):
-    """
-    创建一个新的聊天会话
-    - **session_name**: 会话名称（可选，默认"新对话"）
-    返回：
-    - **session_id**: 新生成的会话ID
-    - **session_name**: 会话名称
-    - **create_time**: 创建时间
-    """
     try:
         session_id = session_manager.create_session(request.session_name)
         if not session_id:
@@ -82,12 +86,6 @@ def list_sessions(
         limit: int = 20,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    获取会话列表（按更新时间倒序）
-    - **limit**: 返回数量限制（默认20）
-    返回：
-    - **sessions**: 会话列表
-    """
     try:
         sessions = session_manager.list_sessions(limit)
         return {
@@ -109,15 +107,7 @@ def rename_session(
         request: RenameSessionRequest,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    重命名指定会话
-    - **session_id**: 会话ID（路径参数）
-    - **session_name**: 新的会话名称
-    返回：
-    - **success**: 是否成功
-    """
     try:
-        # 保护默认会话，不可重命名
         if session_id == "default-0":
             raise HTTPException(status_code=403, detail="默认会话不可重命名")
         
@@ -145,18 +135,10 @@ def delete_session(
         session_id: str,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    删除指定会话及其所有消息
-    - **session_id**: 会话ID（路径参数）
-    返回：
-    - **success**: 是否成功
-    """
     try:
-        # 保护默认会话，不可删除
         if session_id == "default-0":
             raise HTTPException(status_code=403, detail="默认会话不可删除")
         
-        # 删除会话记录及其所有消息
         success = session_manager.delete_session(session_id)
         if not success:
             raise HTTPException(status_code=500, detail="删除会话失败")
@@ -173,6 +155,7 @@ def delete_session(
     except Exception as e:
         logger.error(f"删除会话异常: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"删除失败: {str(e)}")
+
 # ==================== 消息管理接口 ====================
 
 @router.post("/message/add", summary="添加消息")
@@ -180,21 +163,12 @@ def add_message(
         request: AddMessageRequest,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    保存一条聊天记录到数据库
-    - **session_id**: 会话ID
-    - **role**: 消息角色（user/assistant）
-    - **content**: 消息内容
-    - **use_rag**: 是否使用RAG（0或1）
-    - **md5**: 消息MD5值（可选）
-    返回：
-    - **success**: 是否成功
-    """
     try:
+        content_str = _serialize_content(request.content)
         success = session_manager.add_message(
             session_id=request.session_id,
             role=request.role,
-            content=request.content,
+            content=content_str,
             use_rag=request.use_rag,
             md5=request.md5
         )
@@ -221,22 +195,16 @@ def get_message_history(
         limit: int = 50,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    获取指定会话的历史消息
-    - **session_id**: 会话ID（路径参数）
-    - **limit**: 返回消息数量限制（默认50）
-    返回：
-    - **messages**: 消息列表（按时间正序）
-    """
     try:
         messages = session_manager.get_history(session_id, limit)
+        parsed_messages = [_parse_message_content(msg) for msg in messages]
         return {
             "code": 200,
             "message": "获取成功",
             "data": {
                 "session_id": session_id,
-                "messages": messages,
-                "total": len(messages)
+                "messages": parsed_messages,
+                "total": len(parsed_messages)
             }
         }
     except Exception as e:
@@ -249,12 +217,6 @@ def clear_message_history(
         session_id: str,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    清空指定会话的所有消息（不删除会话本身）
-    - **session_id**: 会话ID（路径参数）
-    返回：
-    - **success**: 是否成功
-    """
     try:
         success = session_manager.clear_history(session_id)
         if not success:
@@ -275,86 +237,86 @@ def clear_message_history(
 
 
 # ==================== 聊天接口 ====================
-@router.post("/stream", summary="流式对话接口")
+@router.post("/stream", summary="流式对话接口（支持图片）")
 async def chat_stream(
         request: CustomChatRequest,
         agent: ReactAgent = Depends(get_agent),
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    流式对话接口，支持会话管理和历史记录
-    - **messages**: 消息列表（包含完整对话历史）
-    - **session_id**: 会话ID（可选，不提供则自动创建）
-    - **stream**: 是否启用流式输出（默认True）
-    - **model**: 模型名称
-    返回：SSE 流式响应
-    """
     try:
-        # 参数校验
         if not request.messages:
             raise HTTPException(status_code=400, detail="消息列表不能为空")
-        # 获取最后一条用户消息
+        
         last_user_message = None
         for msg in reversed(request.messages):
             if msg.role == "user":
-                last_user_message = msg.content
+                last_user_message = _extract_text_from_content(msg.content)
                 break
 
         if not last_user_message or not last_user_message.strip():
             raise HTTPException(status_code=400, detail="用户查询内容不能为空")
 
-        # 处理会话ID
         session_id = request.session_id
         if not session_id:
-            # 自动创建新会话
             session_id = session_manager.create_session("新对话")
             logger.info(f"自动创建新会话: {session_id}")
 
         logger.info(f"收到请求 - 会话ID: {session_id}, 消息数: {len(request.messages)}")
 
-        # 保存用户消息到数据库
+        content_str = _serialize_content(last_user_message)
         session_manager.add_message(
             session_id=session_id,
             role="user",
-            content=last_user_message,
+            content=content_str,
             use_rag=0
         )
 
         def event_generator():
             try:
                 full_response = []
-                chunk_count = 0
-                # 真正的流式：逐个接收并立即发送
+                has_image = False
+                
                 for chunk in agent.execute_stream(last_user_message):
-                    chunk_count += 1
                     full_response.append(chunk)
 
-                    # 构造流式数据格式
-                    stream_data = {
-                        "content": chunk,
-                        "isStreaming": True,
-                        "progress": 0,
-                        "session_id": session_id
-                    }
+                    is_image_url = chunk.startswith("http") and any(ext in chunk.lower() for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp'])
+
+                    if is_image_url:
+                        has_image = True
+                        stream_data = {
+                            "type": "image",
+                            "image_url": chunk,
+                            "isStreaming": False,
+                            "progress": 100,
+                            "session_id": session_id
+                        }
+                    else:
+                        stream_data = {
+                            "type": "text",
+                            "content": chunk,
+                            "isStreaming": True,
+                            "progress": 0,
+                            "session_id": session_id
+                        }
+
                     yield f"data: {json.dumps(stream_data, ensure_ascii=False)}\n\n"
 
-                # 保存助手回复到数据库
                 assistant_response = "".join(full_response)
+                content_for_db = _build_content_for_db(assistant_response, has_image)
                 session_manager.add_message(
                     session_id=session_id,
                     role="assistant",
-                    content=assistant_response,
+                    content=content_for_db,
                     use_rag=0
                 )
 
-                # 发送结束标记
-                yield f"data: {json.dumps({'content': '', 'isComplete': True, 'session_id': session_id}, ensure_ascii=False)}\n\n"
+                yield f"data: {json.dumps({'type': 'complete', 'content': '', 'isComplete': True, 'session_id': session_id}, ensure_ascii=False)}\n\n"
                 yield "data: [DONE]\n\n"
 
             except Exception as e:
                 logger.error(f"Agent执行错误: {str(e)}", exc_info=True)
-                # 错误信息流式返回
                 error_data = {
+                    "type": "error",
                     "content": f"⚠️ 系统错误: {str(e)}",
                     "isStreaming": False,
                     "progress": 0,
@@ -378,25 +340,23 @@ async def chat_stream(
         logger.error(f"接口初始化错误: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="服务器内部错误")
 
+
 @router.get("/history", summary="获取会话历史（兼容旧接口）")
 def get_history(
         session_id: str = "default",
         limit: int = 50,
         session_manager: ChatSession = Depends(get_chat_session)
 ):
-    """
-    - **session_id**: 会话ID
-    - **limit**: 消息数量限制
-    """
     try:
         messages = session_manager.get_history(session_id, limit)
+        parsed_messages = [_parse_message_content(msg) for msg in messages]
         return {
             "code": 200,
             "message": "获取成功",
             "data": {
                 "session_id": session_id,
-                "history": messages,
-                "total": len(messages)
+                "history": parsed_messages,
+                "total": len(parsed_messages)
             }
         }
     except Exception as e:
@@ -410,3 +370,100 @@ def get_history(
                 "total": 0
             }
         }
+
+
+# ==================== 辅助函数 ====================
+
+def _serialize_content(content) -> str:
+    """将内容序列化为JSON字符串存储"""
+    if isinstance(content, str):
+        return content
+    elif isinstance(content, list):
+        return json.dumps([item.dict() for item in content], ensure_ascii=False)
+    return str(content)
+
+
+def _parse_message_content(message: dict) -> dict:
+    """解析消息内容，支持图文混合"""
+    content = message.get("content", "")
+    try:
+        if isinstance(content, str) and (content.startswith("[") or content.startswith("{")):
+            parsed = json.loads(content)
+            if isinstance(parsed, list):
+                return {
+                    "role": message.get("role"),
+                    "content": parsed
+                }
+    except (json.JSONDecodeError, AttributeError):
+        pass
+    
+    return {
+        "role": message.get("role"),
+        "content": content
+    }
+
+
+def _extract_text_from_content(content) -> str:
+    """从内容中提取纯文本用于LLM处理"""
+    if isinstance(content, str):
+        return content
+    elif isinstance(content, list):
+        texts = []
+        for item in content:
+            if isinstance(item, dict):
+                if item.get("type") == "text":
+                    texts.append(item.get("text", ""))
+                elif item.get("type") == "image" and item.get("description"):
+                    texts.append(f"[图片: {item.get('description')}]")
+            elif hasattr(item, 'type'):
+                if item.type == "text":
+                    texts.append(item.text)
+                elif item.type == "image" and item.description:
+                    texts.append(f"[图片: {item.description}]")
+        return " ".join(texts)
+    return str(content)
+
+
+def _build_content_for_db(response_text: str, has_image: bool) -> str:
+    """构建数据库存储的内容格式"""
+    if not has_image:
+        return response_text
+
+    content_items = []
+    current_text = []
+
+    lines = response_text.split('\n')
+    for line in lines:
+        line_stripped = line.strip()
+        if _is_image_url(line_stripped):
+            if current_text:
+                content_items.append({
+                    "type": "text",
+                    "text": "\n".join(current_text).strip()
+                })
+                current_text = []
+            content_items.append({
+                "type": "image",
+                "image_url": line_stripped
+            })
+        else:
+            current_text.append(line)
+    
+    if current_text:
+        content_items.append({
+            "type": "text",
+            "text": "\n".join(current_text).strip()
+        })
+    if len(content_items) == 1 and content_items[0]["type"] == "text":
+        return content_items[0]["text"]
+    return json.dumps(content_items, ensure_ascii=False)
+
+def _is_image_url(text: str) -> bool:
+    """判断文本是否为图片URL"""
+    if not text or not isinstance(text, str):
+        return False
+    text_lower = text.lower()
+    if not text_lower.startswith(("http://", "https://")):
+        return False
+    image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.svg']
+    return any(ext in text_lower for ext in image_extensions)
