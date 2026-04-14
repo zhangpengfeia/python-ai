@@ -3,6 +3,7 @@ import {Embeddings} from "@langchain/core/embeddings";
 import { ChatAlibabaTongyi } from "@langchain/community/chat_models/alibaba_tongyi";
 import { AlibabaTongyiEmbeddings } from "@langchain/community/embeddings/alibaba_tongyi";
 import ragConfig from "@/agent/config/rag";
+
 // ==============================
 // 抽象工厂基类（对应 ABC 抽象类）
 // ==============================
@@ -15,9 +16,15 @@ export abstract class BaseModelFactory {
 // ==============================
 export class ChatModelFactory extends BaseModelFactory {
   generator(): BaseChatModel {
+    const apiKey = process.env.DASHSCOPE_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error('DASHSCOPE_API_KEY 环境变量未配置');
+    }
     return new ChatAlibabaTongyi({
       model: ragConfig.chat_model_name,
       streaming: true,
+      alibabaApiKey: apiKey,
     });
   }
 }
@@ -39,8 +46,15 @@ export class ChatModelFactory extends BaseModelFactory {
 // ==============================
 export class EmbeddingFactory extends BaseModelFactory {
   generator(): Embeddings {
+    const apiKey = process.env.DASHSCOPE_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error('DASHSCOPE_API_KEY 环境变量未配置');
+    }
+    
     return new AlibabaTongyiEmbeddings({
       modelName: ragConfig.embedding_model_name,
+      apiKey: apiKey,
     });
   }
 }

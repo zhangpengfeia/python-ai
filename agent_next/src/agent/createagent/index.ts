@@ -5,25 +5,9 @@ import {
 import { createAgent } from "langchain";
 import { chatModel } from "@/agent/model/factory";
 import { getFileContent } from '@/agent/utils/cos_file';
-// import {
-//   ragSummarize,
-//   getWeather,
-//   getUserLocation,
-//   getUserId,
-//   fetchExternalData,
-//   fillContextForReport,
-//   getCurrentMonth,
-//   generateImageFromText
-// } from "@/agent/createagent/tools/agent_tools";
-import {
-  monitorTool,
-  logBeforeModel,
-  reportPromptSwitch
-} from "@/agent/tools/middleware.ts";
 
-// 图片正则（和你 Python 完全一样）
 const IMAGE_URL_PATTERN = /https?:\/\/[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?/i;
-const MARKDOWN_IMAGE_PATTERN = /!\[.*?\]\((https?:\/\/[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?\)/i;
+const MARKDOWN_IMAGE_PATTERN = /!\[.*?\]\((https?:\/\/[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?)\)/i;
 
 // 上下文类型
 interface AgentContext {
@@ -51,8 +35,8 @@ export class ReactAgent {
         // fetchExternalData,
         // fillContextForReport,
         // generateImageFromText
-      ],
-      middleware: [monitorTool, logBeforeModel, reportPromptSwitch]
+      ]
+      // middleware: [monitorTool, logBeforeModel, reportPromptSwitch]
     });
   }
 
@@ -117,3 +101,17 @@ export class ReactAgent {
     }
   }
 }
+
+async function runTest() {
+  const query = '你好';
+  console.log(`\n用户输入: ${query}\n`);
+  console.log('-'.repeat(60));
+  const agent = new ReactAgent();
+  await agent.init();
+  const resultChunks: string[] = [];
+  for await (const chunk of agent.executeStream(query)) {
+    resultChunks.push(chunk);
+    console.log(`输出片段: ${JSON.stringify(chunk)}`);
+  }
+}
+runTest()
