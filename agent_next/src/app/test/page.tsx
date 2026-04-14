@@ -3,6 +3,7 @@ import {
   CloudUploadOutlined,
   CommentOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   EditOutlined,
   EllipsisOutlined,
   GlobalOutlined,
@@ -768,7 +769,64 @@ const Independent: React.FC = () => {
         />
       ),
       contentRender: (content: any, { status }) => {
-        const newContent = content.replace(/\n\n/g, '<br/><br/>');
+        // 如果 content 是数组（如图片数组），直接渲染
+        if (Array.isArray(content)) {
+          return (
+            <div>
+              {content.map((item, index) => {
+                if (item.type === 'image' && item.image_url) {
+                  const handleDownload = async () => {
+                    try {
+                      messageApi.loading('正在下载...');
+                      const response = await fetch(item.image_url);
+                      const blob = await response.blob();
+                      const url = window.URL.createObjectURL(blob);
+                      const link = document.createElement('a');
+                      link.href = url;
+                      link.download = `image_${Date.now()}_${index}.png`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      window.URL.revokeObjectURL(url);
+                      messageApi.success('下载成功');
+                    } catch (error) {
+                      console.error('下载失败:', error);
+                      messageApi.error('下载失败，请稍后重试');
+                    }
+                  };
+
+                  return (
+                    <div key={index} style={{ position: 'relative', display: 'inline-block', margin: '8px 0' }}>
+                      <img
+                        src={item.image_url}
+                        alt="uploaded"
+                        style={{ maxWidth: '100%', borderRadius: '8px', display: 'block' }}
+                      />
+                      <Button
+                        type="primary"
+                        icon={<DownloadOutlined />}
+                        onClick={handleDownload}
+                        style={{
+                          position: 'absolute',
+                          bottom: '12px',
+                          right: '12px',
+                          opacity: 0.9,
+                        }}
+                      >
+                        下载
+                      </Button>
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          );
+        }
+
+        // 如果是字符串，进行换行处理
+        const contentStr = typeof content === 'string' ? content : String(content || '');
+        const newContent = contentStr.replace(/\n\n/g, '<br/><br/>');
         return (
           <XMarkdown
             paragraphTag="div"

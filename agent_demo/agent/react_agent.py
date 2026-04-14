@@ -37,41 +37,6 @@ class ReactAgent:
             middleware=[monitor_tool, log_before_model, report_prompt_switch]
         )
 
-    async def execute_stream_async(self, query: str):
-        input_dict = {
-            "messages": [
-                {"role": "user", "content": query}
-            ]
-        }
-        
-        full_content = []
-        is_image_generation = False
-        
-        async for event in self.agent.astream_events(input_dict, version="v2", stream_mode="messages", context={"report": False, "is_image_generation": False}):
-            if event["event"] == "on_chat_model_stream":
-                chunk = event["data"]["chunk"]
-                if chunk.content:
-                    full_content.append(chunk.content)
-            
-            if event["event"] == "on_chain_end":
-                if hasattr(event, 'metadata') and event.get('metadata', {}).get('context'):
-                    is_image_generation = event['metadata']['context'].get('is_image_generation', False)
-        
-        final_output = "".join(full_content).strip()
-        
-        markdown_match = MARKDOWN_IMAGE_PATTERN.search(final_output)
-        if markdown_match:
-            yield markdown_match.group(1)
-            return
-        
-        image_url_match = IMAGE_URL_PATTERN.search(final_output)
-        if image_url_match:
-            yield image_url_match.group(0)
-            return
-        
-        for part in full_content:
-            yield part
-
     def execute_stream(self, query: str) -> Generator[str, None, None]:
         input_dict = {
             "messages": [
