@@ -9,9 +9,13 @@ from utils.prompt_loader import load_system_prompts
 
 import re
 
-# 简单正则匹配图片 URL（可根据你的实际 URL 格式微调）
 IMAGE_URL_PATTERN = re.compile(
-    r'https?://[^\s]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?.*)?$',
+    r'https?://[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?',
+    re.IGNORECASE
+)
+
+MARKDOWN_IMAGE_PATTERN = re.compile(
+    r'!\[.*?\]\((https?://[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?)\)',
     re.IGNORECASE
 )
 
@@ -28,7 +32,7 @@ class ReactAgent:
                 get_current_month,
                 fetch_external_data,
                 fill_context_for_report,
-                generate_image_from_text  # 画图工具
+                generate_image_from_text
             ],
             middleware=[monitor_tool, log_before_model, report_prompt_switch]
         )
@@ -39,11 +43,34 @@ class ReactAgent:
                 {"role": "user", "content": query}
             ]
         }
-        async for event in self.agent.astream_events(input_dict, version="v2", stream_mode="messages", context={"report": False}):
+        
+        full_content = []
+        is_image_generation = False
+        
+        async for event in self.agent.astream_events(input_dict, version="v2", stream_mode="messages", context={"report": False, "is_image_generation": False}):
             if event["event"] == "on_chat_model_stream":
                 chunk = event["data"]["chunk"]
                 if chunk.content:
-                    yield chunk.content
+                    full_content.append(chunk.content)
+            
+            if event["event"] == "on_chain_end":
+                if hasattr(event, 'metadata') and event.get('metadata', {}).get('context'):
+                    is_image_generation = event['metadata']['context'].get('is_image_generation', False)
+        
+        final_output = "".join(full_content).strip()
+        
+        markdown_match = MARKDOWN_IMAGE_PATTERN.search(final_output)
+        if markdown_match:
+            yield markdown_match.group(1)
+            return
+        
+        image_url_match = IMAGE_URL_PATTERN.search(final_output)
+        if image_url_match:
+            yield image_url_match.group(0)
+            return
+        
+        for part in full_content:
+            yield part
 
     def execute_stream(self, query: str) -> Generator[str, None, None]:
         input_dict = {
@@ -52,30 +79,49 @@ class ReactAgent:
             ]
         }
 
-        # 用来缓存完整内容，判断是否是图片 URL
         full_content = []
+        context = {"report": False, "is_image_generation": False}
 
-        for chunk in self.agent.stream(input_dict, stream_mode="messages", context={"report": False}):
+        for chunk in self.agent.stream(input_dict, stream_mode="messages", context=context):
             token, metadata = chunk
             if isinstance(token, AIMessageChunk) and token.content:
                 full_content.append(token.content)
 
-        # 拼接完整结果
         final_output = "".join(full_content).strip()
+        
+        is_image_generation = context.get("is_image_generation", False)
 
-        # ====================== 核心判断 ======================
-        if IMAGE_URL_PATTERN.match(final_output):
-            # 如果是图片 URL → 不流式，一次性返回
-            yield final_output
-        else:
-            # 正常文本 → 流式返回
-            for part in full_content:
-                yield part
+        if is_image_generation:
+            print(f"\n[检测到图像生成工具被调用]")
+            markdown_match = MARKDOWN_IMAGE_PATTERN.search(final_output)
+            if markdown_match:
+                print(f"[提取到Markdown格式图片链接]")
+                yield markdown_match.group(1)
+                return
+            
+            image_url_match = IMAGE_URL_PATTERN.search(final_output)
+            if image_url_match:
+                print(f"[提取到普通图片链接]")
+                yield image_url_match.group(0)
+                return
+
+        print(f"\n[普通文本流式输出]")
+        for part in full_content:
+            yield part
 
 
 if __name__ == '__main__':
     agent = ReactAgent()
-    # query = "扫地机器人在所在的地区气温如何保养？"
-    query = "画一只小猫"  # 测试图片URL → 会一次性返回
+    print("="*60)
+    print("测试1: 图像生成 - 应该一次性返回纯URL")
+    print("="*60)
+    query = "画一只小猫"
+    print(f"用户输入: {query}")
+    print("-"*60)
+    result_chunks = []
     for chunk in agent.execute_stream(query):
-        print(chunk, end="", flush=True)
+        result_chunks.append(chunk)
+        print(f"输出片段: {repr(chunk)}")
+    print(f"\n完整结果: {''.join(result_chunks)}")
+    print(f"是否为纯URL: {result_chunks and len(result_chunks) == 1 and IMAGE_URL_PATTERN.match(result_chunks[0])}")
+    print("\n" + "="*60)

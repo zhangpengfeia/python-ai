@@ -22,6 +22,10 @@ def monitor_tool(
         logger.info(f"[tool monitor]工具{request.tool_call['name']}调用成功")
         if request.tool_call['name'] == "fill_context_for_report":
             request.runtime.context["report"] = True
+        
+        if request.tool_call['name'] == "generate_image_from_text":
+            request.runtime.context["is_image_generation"] = True
+        
         return result
     except Exception as e:
         logger.error(f"工具{request.tool_call['name']}调用失败，原因：{str(e)}")
