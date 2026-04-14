@@ -74,7 +74,7 @@ def fetch_external_data(user_id: str, moth: str) -> str:
 def fill_context_for_report():
     return "fill_context_for_report已调用"
 
-@tool(description="根据文本描述生成图像，size 默认格式为2048*2048,只返回图片链接，不需要任何文字信息")
+@tool(description="根据文本描述生成静态图像(不支持视频/动图生成),size默认格式为2048*2048,只返回图片链接,不需要任何文字信息")
 def generate_image_from_text(prompt: str, negative_prompt: str = "", size: str = "2048*2048") -> str:
     return api_image_from_text(prompt, negative_prompt, size)
 

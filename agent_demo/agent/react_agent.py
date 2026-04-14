@@ -9,6 +9,8 @@ from utils.prompt_loader import load_system_prompts
 
 import re
 
+print(load_system_prompts())
+
 IMAGE_URL_PATTERN = re.compile(
     r'https?://[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?',
     re.IGNORECASE
