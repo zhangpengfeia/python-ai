@@ -5,21 +5,21 @@ import {
 import { createAgent } from "langchain";
 import { chatModel } from "@/agent/model/factory";
 import { getFileContent } from '@/agent/utils/cos_file';
-import {
-  ragSummarize,
-  getWeather,
-  getUserLocation,
-  getUserId,
-  fetchExternalData,
-  fillContextForReport,
-  getCurrentMonth,
-  generateImageFromText
-} from "@/agent/createagent/tools/agent_tools";
+// import {
+//   ragSummarize,
+//   getWeather,
+//   getUserLocation,
+//   getUserId,
+//   fetchExternalData,
+//   fillContextForReport,
+//   getCurrentMonth,
+//   generateImageFromText
+// } from "@/agent/createagent/tools/agent_tools";
 import {
   monitorTool,
   logBeforeModel,
   reportPromptSwitch
-} from "@/agent/tools/middleware";
+} from "@/agent/tools/middleware.ts";
 
 // 图片正则（和你 Python 完全一样）
 const IMAGE_URL_PATTERN = /https?:\/\/[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?/i;
@@ -43,14 +43,14 @@ export class ReactAgent {
       model: chatModel,
       systemPrompt: systemPrompt,
       tools: [
-        ragSummarize,
-        getWeather,
-        getUserLocation,
-        getUserId,
-        getCurrentMonth,
-        fetchExternalData,
-        fillContextForReport,
-        generateImageFromText
+        // ragSummarize,
+        // getWeather,
+        // getUserLocation,
+        // getUserId,
+        // getCurrentMonth,
+        // fetchExternalData,
+        // fillContextForReport,
+        // generateImageFromText
       ],
       middleware: [monitorTool, logBeforeModel, reportPromptSwitch]
     });
