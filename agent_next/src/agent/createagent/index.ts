@@ -14,13 +14,12 @@ import {
   fillContextForReport,
   getCurrentMonth,
   generateImageFromText
-} from "@/agent/createagent/tools";
+} from "@/agent/createagent/tools/agent_tools";
 import {
   monitorTool,
   logBeforeModel,
   reportPromptSwitch
 } from "@/agent/tools/middleware";
-import { Generator } from "@langchain/core/types";
 
 // 图片正则（和你 Python 完全一样）
 const IMAGE_URL_PATTERN = /https?:\/\/[^\s)]+?\.(png|jpg|jpeg|gif|bmp|webp)(\?[^\s)]*)?/i;
