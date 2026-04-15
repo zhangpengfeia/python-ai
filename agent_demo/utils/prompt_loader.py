@@ -45,5 +45,5 @@ def load_report_prompts():
 
 
 if __name__ == '__main__':
-    print(load_system_prompts())
+    print(load_rag_prompts())
 

@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
 
 const mysqlConfig = {
-  host: process.env.MYSQL_HOST || 'localhost',
+  host: process.env.MYSQL_HOST || '152.136.228.231',
   port: parseInt(process.env.MYSQL_PORT || '3306'),
   user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '',
+  password: process.env.MYSQL_PASSWORD || '123456',
   database: process.env.MYSQL_DATABASE || 'ai_agent',
   waitForConnections: true,
   connectionLimit: 10,
@@ -40,3 +40,8 @@ export async function closeConnection() {
     console.log('MySQL 数据库连接已关闭');
   }
 }
+
+const test = async () => {
+  const client = await getConnection();
+  console.log(client);
+};

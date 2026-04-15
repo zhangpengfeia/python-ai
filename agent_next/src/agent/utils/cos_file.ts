@@ -1,4 +1,4 @@
-import cos from '@/lib/config/cos_client';
+import cos from '@/lib/config/db/cos_client';
 
 const BUCKET = 'aiagent-1301349525';
 const REGION = 'ap-beijing';

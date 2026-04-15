@@ -5,6 +5,7 @@ import * as fs from "node:fs";
 const cos = new COS({
     SecretId: process.env.SECRET_ID,
     SecretKey: process.env.SECRET_KEY
+
 });
 
 export default cos;

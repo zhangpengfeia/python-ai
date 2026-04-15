@@ -1,16 +1,11 @@
 import { tool } from "@langchain/core/tools";
-import { apiImageFromText } from "./apiImageGeneration";
-import { RagSummarizeService } from "@/rag/ragService";
-import { agentConf } from "@/utils/configHandler";
-import { logger } from "@/utils/loggerHandler";
-import { getAbsPath } from "@/utils/pathTool";
-import { apiCity } from "./apiUserLocation";
-import { apiWeather } from "./apiWeather";
+// import { apiImageFromText } from "./apiImageGeneration";
+import { RagSummarizeService } from "@/agent/rag/rag_server";
+import { logger } from "@/agent/utils/loggerHandler";
+// import { apiCity } from "./apiUserLocation";
+// import { apiWeather } from "./apiWeather";
 import * as fs from "fs";
-import * as path from "path";
-
-// ==============================
-// 类型定义
+import {z} from "zod";
 // ==============================
 interface ExternalDataRecord {
   特征: string;
@@ -25,16 +20,8 @@ interface ExternalData {
   };
 }
 
-// ==============================
-// 全局状态（和你 Python 完全一致）
-// ==============================
 const rag = new RagSummarizeService();
-let externalData: ExternalData = {};
-
-// ==============================
-// 工具定义（1:1 对应 Python @tool）
-// ==============================
-
+const externalData: ExternalData = {};
 /**
  * 从向量存储中检索参考资料
  */
@@ -53,9 +40,9 @@ export const ragSummarize = tool(
  */
 export const getWeather = tool(
   async () => {
-    const cityInfo = await apiCity();
-    const weather = await apiWeather(cityInfo.locationId);
-    return weather;
+    // const cityInfo = await apiCity();
+    // const weather = await apiWeather(cityInfo.locationId);
+    return '今天天气晴朗，15°';
   },
   {
     name: "get_weather",
@@ -68,8 +55,9 @@ export const getWeather = tool(
  */
 export const getUserLocation = tool(
   async () => {
-    const cityInfo = await apiCity();
-    return JSON.stringify(cityInfo);
+    // const cityInfo = await apiCity();
+    // return JSON.stringify(cityInfo);
+    return "上海";
   },
   {
     name: "get_user_location",
@@ -111,14 +99,12 @@ export const getCurrentMonth = tool(
 // ==============================
 function generateExternalData() {
   if (Object.keys(externalData).length === 0) {
-    const externalDataPath = getAbsPath(agentConf.externalDataPath);
+    const externalDataPath = '../../../../agent_demo/data/external/records.csv'; // 链接可以上传cos
     if (!fs.existsSync(externalDataPath)) {
       throw new Error(`外部数据文件${externalDataPath}不存在`);
     }
-
     const fileContent = fs.readFileSync(externalDataPath, "utf-8");
     const lines = fileContent.split("\n").slice(1); // 跳过表头
-
     for (const line of lines) {
       if (!line.trim()) continue;
       const arr = line.trim().split(",");
@@ -146,19 +132,23 @@ function generateExternalData() {
  * 从外部系统中获取指定用户指定月份的使用记录
  */
 export const fetchExternalData = tool(
-  (userId: string, month: string) => {
+  async (input: { userId: string; month: string }) => {
     generateExternalData();
     try {
-      const data = externalData[userId][month];
+      const data = externalData[input.userId][input.month];
       return JSON.stringify(data);
     } catch (error) {
-      logger.warn(`[外部数据] 未找到用户${userId}的${month}月数据`);
+      logger.warn(`[外部数据] 未找到用户${input.userId}的${input.month}月数据`);
       return "";
     }
   },
   {
     name: "fetch_external_data",
     description: "从外部系统中获取指定用户指定月份的使用记录，以字符串形式返回，未检索则返回空字符串",
+    schema: z.object({
+      userId: z.string().describe("用户ID"),
+      month: z.string().describe("月份，格式：YYYY-MM"),
+    }),
   }
 );
 

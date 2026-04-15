@@ -6,7 +6,7 @@ interface RagConfig {
 }
 
 const ragConfig: RagConfig = {
-    chat_model_name: 'MiniMax-M2.1',
+    chat_model_name: 'qwen3-max-2026-01-23',
     embedding_model_name: 'text-embedding-v1'
 };
 
