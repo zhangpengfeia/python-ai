@@ -1,5 +1,5 @@
 import request from "@/lib/config/axios";
-import * as ApiTest from "@/app/api/chat/route";
+import * as ApiTest from "@/app/api/v1/chat/route";
 import {
   CustomChatRequest,
   CreateSessionRequest,

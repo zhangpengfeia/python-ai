@@ -1,12 +1,11 @@
 import { tool } from "@langchain/core/tools";
-// import { apiImageFromText } from "./apiImageGeneration";
 import { RagSummarizeService } from "@/agent/rag/rag_server";
 import { logger } from "@/agent/utils/loggerHandler";
-// import { apiCity } from "./apiUserLocation";
-// import { apiWeather } from "./apiWeather";
+import { imageService } from "@/agent/rag/image_server";
 import * as fs from "fs";
-import {z} from "zod";
-// ==============================
+import { z } from "zod";
+import {apiCity, apiWeather} from "@/agent/createagent/tools/api_gaode";
+
 interface ExternalDataRecord {
   特征: string;
   效率: string;
@@ -40,9 +39,13 @@ export const ragSummarize = tool(
  */
 export const getWeather = tool(
   async () => {
-    // const cityInfo = await apiCity();
-    // const weather = await apiWeather(cityInfo.locationId);
-    return '今天天气晴朗，15°';
+    const cityInfo = await apiCity();
+    const weather = await apiWeather(cityInfo.adcode);
+    if (weather) {
+      return `城市：${weather.city}\n天气：${weather.weather}\n温度：${weather.temperature}°C\n风向：${weather.winddirection}\n风力：${weather.windpower}级\n湿度：${weather.humidity}%\n更新时间：${weather.reporttime}`;
+    } else {
+      return '无法获取天气信息';
+    }
   },
   {
     name: "get_weather",
@@ -55,9 +58,8 @@ export const getWeather = tool(
  */
 export const getUserLocation = tool(
   async () => {
-    // const cityInfo = await apiCity();
-    // return JSON.stringify(cityInfo);
-    return "上海";
+    const cityInfo = await apiCity();
+    return JSON.stringify(cityInfo);
   },
   {
     name: "get_user_location",
@@ -94,8 +96,6 @@ export const getCurrentMonth = tool(
   }
 );
 
-// ==============================
-// 外部数据生成（对应 generate_external_data）
 // ==============================
 function generateExternalData() {
   if (Object.keys(externalData).length === 0) {
@@ -168,15 +168,37 @@ export const fillContextForReport = tool(
 /**
  * 根据文本描述生成静态图像
  */
-// export const generateImageFromText = tool(
-//   async (prompt: string, negativePrompt: string = "", size: string = "2048*2048") => {
-//     return apiImageFromText(prompt, negativePrompt, size);
-//   },
-//   {
-//     name: "generate_image_from_text",
-//     description: "根据文本描述生成静态图像(不支持视频/动图生成),size默认格式为2048*2048,只返回图片链接,不需要任何文字信息",
-//   }
-// );
+export const generateImageFromText = tool(
+  async (input: { prompt: string; negativePrompt?: string; size?: string }) => {
+    try {
+      const result = await imageService.generateImage(
+        input.prompt,
+        input.negativePrompt,
+        input.size || "2048*2048"
+      );
+
+      if (result.success && result.data.image_url) {
+        return result.data.image_url;
+      } else {
+        logger.error(`图像生成失败: ${result.error}`);
+        return "";
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "未知错误";
+      logger.error(`图像生成异常: ${errorMessage}`);
+      return "";
+    }
+  },
+  {
+    name: "generate_image_from_text",
+    description: "根据文本描述生成静态图像(不支持视频/动图生成),只返回图片链接,不需要任何文字信息",
+    schema: z.object({
+      prompt: z.string().describe("图像描述文本"),
+      negativePrompt: z.string().optional().describe("负向提示词，默认为空"),
+      size: z.string().optional().describe("图像尺寸，默认格式为2048*2048"),
+    }),
+  }
+);
 
 // ==============================
 // 测试入口（对应 __main__）

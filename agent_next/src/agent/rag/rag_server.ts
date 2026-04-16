@@ -45,7 +45,6 @@ export class RagSummarizeService {
     console.log("✅ RAG 服务初始化完成");
   }
 
-  // 所有方法调用前，自动确保初始化
   private async ensureInitialized(): Promise<void> {
     if (!this.chain) {
       console.log("🔄 首次调用，自动执行 init()...");
@@ -72,7 +71,6 @@ export class RagSummarizeService {
     await this.ensureInitialized(); // ✅ 自动初始化
     const contextDocs = await this.retrieveDocs(query);
     const context = this.buildContext(contextDocs);
-
     const stream = await this.chain.stream({ input: query, context });
     for await (const chunk of stream) {
       if (chunk) yield chunk;
@@ -94,7 +92,6 @@ export class RagSummarizeService {
 // ====================== 测试代码 ======================
 if (require.main === module) {
   (async () => {
-    console.log("=== RAG 测试开始 ===");
     const rag = new RagSummarizeService();
     const query = "你好, 机器人可以水洗吗";
     console.log("查询:", query);

@@ -24,7 +24,7 @@ const config: {
    * 可选值: application/x-www-form-urlencoded multipart/form-data
    */
   // api前缀
-  defaultbaseURL: '/'
+  defaultbaseURL: '/v1'
 };
 
 export { config };

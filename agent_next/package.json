@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
@@ -19,6 +23,7 @@
     "@langchain/langgraph": "^1.2.8",
     "@langchain/openai": "^1.4.4",
     "@langchain/textsplitters": "^1.0.1",
+    "@prisma/client": "^7.7.0",
     "antd": "^6.1.1",
     "antd-style": "^4.1.0",
     "axios": "^1.15.0",
@@ -46,6 +51,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "less": "^4.6.4",
+    "prisma": "^7.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

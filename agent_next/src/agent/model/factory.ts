@@ -5,16 +5,12 @@ import { AlibabaTongyiEmbeddings } from "@langchain/community/embeddings/alibaba
 import ragConfig from "@/agent/config/rag";
 import {ChatOpenAI} from "@langchain/openai";
 
-// ==============================
 // 抽象工厂基类（对应 ABC 抽象类）
-// ==============================
 export abstract class BaseModelFactory {
   abstract generator(): Embeddings | BaseChatModel | null;
 }
 
-// ==============================
 // 通义千问聊天模型工厂
-// ==============================
 export class ChatModelFactory extends BaseModelFactory {
   generator(): BaseChatModel {
     const apiKey = process.env.DASHSCOPE_API_KEY;
@@ -33,9 +29,7 @@ export class ChatModelFactory extends BaseModelFactory {
   }
 }
 
-// ==============================
 // Ollama 聊天模型工厂
-// ==============================
 // export class ChatOllamaModelFactory extends BaseModelFactory {
 //   generator(): BaseChatModel {
 //     return new ChatOllama({
@@ -45,9 +39,7 @@ export class ChatModelFactory extends BaseModelFactory {
 //   }
 // }
 
-// ==============================
 // 嵌入模型工厂
-// ==============================
 export class EmbeddingFactory extends BaseModelFactory {
   generator(): Embeddings {
     const apiKey = process.env.DASHSCOPE_API_KEY;
@@ -63,9 +55,6 @@ export class EmbeddingFactory extends BaseModelFactory {
   }
 }
 
-// ==============================
-// 单例导出（和你 Python 完全一致）
-// ==============================
 export const ChatAlibabaTongyiModel = new ChatModelFactory().generator();
 // export const chatOllModel = new ChatOllamaModelFactory().generator();
 export const embedModel = new EmbeddingFactory().generator();

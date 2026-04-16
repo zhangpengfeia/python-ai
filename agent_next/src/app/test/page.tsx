@@ -309,7 +309,7 @@ class CustomProvider<
 // 从后端获取会话历史消息
 const getApiHistoryMessages = async (conversationKey: string): Promise<DefaultMessageInfo<ChatMessage>[]> => {
   try {
-    const response = await fetch(`http://152.136.228.231:8200/api/v1/chat/message/history/${conversationKey}?limit=50`, {
+    const response = await fetch(`/api/v1/chat/message/history/${conversationKey}?limit=50`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -429,7 +429,7 @@ const Independent: React.FC = () => {
       providerCaches.current.set(
         conversationKey,
         new CustomProvider<CustomMessage, CustomInput, CustomOutput>({
-          request: XRequest('http://152.136.228.231:8200/api/v1/chat/stream', {
+          request: XRequest('/api/v1/chat/stream', {
             manual: true,
             params: {
               stream: true,
@@ -460,7 +460,7 @@ const Independent: React.FC = () => {
 
   const getApiDefaultConversations = async () => {
   try {
-    const response = await fetch('http://152.136.228.231:8200/api/v1/chat/session/list?limit=50', {
+    const response = await fetch('/api/v1/chat/session/list?limit=50', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -504,7 +504,7 @@ const Independent: React.FC = () => {
       }
 
       // 调用后端接口创建新会话
-      const response = await fetch('http://152.136.228.231:8200/api/v1/chat/session/create', {
+      const response = await fetch('/api/v1/chat/session/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -559,7 +559,7 @@ const Independent: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://152.136.228.231:8200/api/v1/chat/session/${renameSessionId}/rename`, {
+      const response = await fetch(`/api/v1/chat/session/${renameSessionId}/rename`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -904,7 +904,7 @@ const Independent: React.FC = () => {
                   onClick: async () => {
                     try {
                       // 调用后端删除接口
-                      const response = await fetch(`http://152.136.228.231:8200/api/v1/chat/session/${conversation.key}`, {
+                      const response = await fetch(`/api/v1/chat/session/${conversation.key}`, {
                         method: 'DELETE',
                         headers: {
                           'Content-Type': 'application/json',

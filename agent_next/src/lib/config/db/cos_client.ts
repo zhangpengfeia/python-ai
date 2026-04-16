@@ -1,11 +1,8 @@
 // SECRETID 和 SECRETKEY 请登录 https://console.cloud.tencent.com/cam/capi 进行查看和管理
-
 import COS from 'cos-nodejs-sdk-v5'
-import * as fs from "node:fs";
 const cos = new COS({
     SecretId: process.env.SECRET_ID,
     SecretKey: process.env.SECRET_KEY
-
 });
 
 export default cos;

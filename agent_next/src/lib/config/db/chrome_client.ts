@@ -1,7 +1,7 @@
 import { ChromaClient } from 'chromadb';
 
 const chromaConfig = {
-  host: process.env.CHROMA_HOST || '152.136.228.231',
+  host: process.env.CHROMA_HOST,
   port: parseInt(process.env.CHROMA_PORT || '8100'),
   authProvider: process.env.CHROMA_AUTH_PROVIDER || 'token',
   authCredentials: process.env.CHROMA_AUTH_CREDENTIALS || '',
@@ -12,7 +12,7 @@ let client: ChromaClient | null = null;
 export async function getChromaClient() {
   if (!client) {
     client = new ChromaClient({
-      path: 'http://152.136.228.231:8100',
+      path: `http://${chromaConfig.host}:${chromaConfig.port}`,
       // host: "152.136.228.231",
       // port: 8100,
       ssl: true,
