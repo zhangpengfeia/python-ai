@@ -1,11 +1,11 @@
 interface RagConfig {
-  chat_model_name: string;
-  embedding_model_name: "multimodal-embedding-v1" | "text-embedding-v1" | "text-embedding-v2" | "text-embedding-v3" | "text-embedding-v4";
+    chat_model_name: string;
+    embedding_model_name: string
 }
 
 const ragConfig: RagConfig = {
-    chat_model_name: 'qwen3-max-2026-01-23',
-    embedding_model_name: 'text-embedding-v1'
+    chat_model_name: process.env.CHAT_MODEL_NAME || "MiniMax-M2.1",
+    embedding_model_name: process.env.EMBEDDING_MODEL_NAME || "text-embedding-v1"
 };
 
 
