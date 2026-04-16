@@ -1,5 +1,4 @@
 import request from "@/lib/config/axios";
-import * as ApiTest from "@/app/api/v1/chat/route";
 import {
   CustomChatRequest,
   CreateSessionRequest,
@@ -12,16 +11,6 @@ import {
 
 // 接口基础路径
 const basePath = "/chat";
-/**
- * 测试接口
- */
-export async function getTest(body: { start_date: number; query_type: number }) {
-  return request.post<ApiTest.getReturn>({
-    url: basePath,
-    data: body,
-  });
-}
-
 /**
  * 创建新会话
  */

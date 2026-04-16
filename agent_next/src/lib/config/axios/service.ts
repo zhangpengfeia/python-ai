@@ -16,7 +16,7 @@ service.interceptors.request.use(
 
 // 响应拦截器：只抛错，不处理任何逻辑
 service.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   (error) => Promise.reject(error)
 );
 
