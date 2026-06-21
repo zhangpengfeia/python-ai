@@ -1,0 +1,70 @@
+networks:
+  ai_network:
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ai_mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: ai_agent
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ai_network
+
+  chroma-server:
+    image: chromadb/chroma:latest
+    container_name: ai_chroma
+    ports:
+      - "8100:8000"
+    environment:
+      - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.token_authn.TokenAuthenticationServerProvider
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=admin
+    restart: always
+    volumes:
+      - chroma_data:/chroma/chroma
+    networks:
+      - ai_network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_app
+    restart: always
+    env_file:
+      - .env.docker
+    ports:
+      - "8200:8200"
+    volumes:
+      - app_logs:/app/logs
+      - app_data:/app/data
+      - ./config:/app/config:ro
+      - ./prompts:/app/prompts:ro
+    depends_on:
+      - mysql
+      - chroma-server
+    networks:
+      - ai_network
+  nginx:
+    image: nginx:alpine
+    container_name: ai_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d:ro
+    restart: always
+    depends_on:
+      - app
+    networks:
+      - ai_network
+
+volumes:
+  mysql_data:
+  chroma_data:
+  app_logs:
+  app_data:
