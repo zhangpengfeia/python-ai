@@ -22,8 +22,13 @@ asyncio.set_event_loop(None)
 current_loop.run_forever()
 # 停止事件循环
 current_loop.stop()
-
-
-# _run_once（） 方法核心调用事件循环中的队列，确保每次该方法运行，都能保证ready队列中的所有回调得到执行
-# 1. 检查延时队列，加入ready, 2.计算等待事件，timeout
-
+"""
+_run_once（） 方法核心调用事件循环中的队列，确保每次该方法运行，都能保证ready队列中的所有回调得到执行
+1. 检查延时队列，加入ready,
+2.计算等待时间timeout 
+    a.ready有任务，timeout=0不等待 
+    b.延时队列有任务时等待timeout = 延时队列队首-当前时间
+    c.i/o,延时队列都没有任务时等待 timeout = None
+3.用timeout的时间阻塞线程，等待I/O，期间有任何IO任务马上加入ready队列
+4.复制ready队列中的所有任务，到执行队列中
+"""

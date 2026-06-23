@@ -59,3 +59,12 @@ for i in simple_generator():
 # 生成器表达式
 squares_gen = (x**2 for x in range(1000000))
 
+def paginated_query(total_items, page_size):
+    for i in range(0, total_items, page_size):
+        end = min(i+page_size, total_items)
+        yield list(range(i, end))
+    pass
+
+
+for page in paginated_query(25, 10):
+    print(page)
