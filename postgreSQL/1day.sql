@@ -55,6 +55,6 @@ create table test.user(
 foreign key (course_id) references test.course(id) no action
 1.NO ACTION 外键字段不能为空
 2.CASCADE 级联删除
-3.SET NULL 设置为NULL
+3.SET NULL 父表删除后，设置为NULL
 4.RESTRICT 同 NO ACTION, 不支持延迟检查
 */
