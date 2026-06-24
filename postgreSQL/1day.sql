@@ -1,4 +1,18 @@
--- ddl语音
+/*
+DML 数据操作语言，对表CRUD
+
+INSERT 插入单行，多行，冲突时更新或者忽略
+UPDATE 更新指定行，所有行，多行，列
+DELETE 删除指定行，所有行
+SELECT 查询指定表，指定列数据，按照指定条件，排序，分页，聚合统计，分组聚合
+
+危险操作，ai生成重点关注：
+⚠ DELETE FROM 表名
+  UPDATE 语句中没有 WHERE
+  TRUNCATE 表名
+*/
+
+-- DDL语言，数据结构定义，而非数据操作
 -- 第一步：创建test模式
 CREATE SCHEMA IF NOT EXISTS test;
 -- 第二步：授权
@@ -6,9 +20,11 @@ GRANT ALL PRIVILEGES ON SCHEMA test TO admin;
 
 -- 第三步：创建表
 /*
--- 一般主键设置为 primary key
+-- 一般主键设置为 Primary Key (PK)
 1.唯一性，不能重复
 2.非空
+
+UNIQUE Key (UK) 唯一性约束
 */
 create table test.user(
     id int primary key,
@@ -26,7 +42,7 @@ create table test.user(
     任意一表中加入外键，指向另一表的主键
     外键约束后修改时会做外键检查，确保正确
     实现方式：
-        为外键加上UNIQUE约束，确保唯一
+        为外键加上 UNIQUE 约束，确保唯一
         user_id integer unique not null
         foreign key (user_id) references test.user(id)
 1对多：
@@ -51,10 +67,21 @@ create table test.user(
 从表：包含外键
 主表：被外键引用的表
 
-外键约束：
+外键约束：Foreign Key (FK)
 foreign key (course_id) references test.course(id) no action
 1.NO ACTION 外键字段不能为空
 2.CASCADE 级联删除
 3.SET NULL 父表删除后，设置为NULL
 4.RESTRICT 同 NO ACTION, 不支持延迟检查
+
+⚠！有些团队中，抛弃使用外键约束，因为外键约束会带来一些性能问题，且在某些场景下，外键约束会带来不必要的限制。
+通过代码严格控制数据的正确性，避免使用外键约束。
+*/
+
+/*
+设计表注意事项：
+1.使用ERD图分析表关系
+2.注意表关系正确，不要冗余，导致数据重复。
+3.注意数据类型，不要使用过大的数据类型，导致空间浪费。
+4.信息不缺失
 */

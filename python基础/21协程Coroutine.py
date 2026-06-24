@@ -8,17 +8,66 @@
 6. await 可以等待一个协程对象，也可以等待一个task(Future)，实际等待的是awaitable协议__await__
 """
 import asyncio
+def async_delay(duration: int):
+    loop = asyncio.get_event_loop()
+    future = loop.create_future()
+    loop.call_later(duration, future.set_result, None)
+    return future
+
+from typing import Coroutine
 def gather(*aws: Coroutine) -> asyncio.Future:
-    # 你的代码
-    pass
+    # 1.获取任务数量 2.根据任务数量添加callback, 3.返回future
+    future = asyncio.Future()
+    count = 0 # 任务已完成数量
+    taskslen = len(aws) # 任务数量
+    contexts = [None] * taskslen  # 文本列表
+
+    def on_done(f: asyncio.Future, idx: int):
+        nonlocal count
+        print(f.result())
+        contexts[idx] = f.result()
+        count += 1
+        if count == taskslen:
+            future.set_result(contexts)
+    for (i, aw) in enumerate(aws):
+        asyncio.create_task(aw).add_done_callback(lambda f, idx=i: on_done(f,idx))
+    return future
+
 async def coro(name: str, duration: int):
     await async_delay(duration)
     return f"{name} 完成"
-async def main():
-    results = await gather(
-        coro("A", 2),
-        coro("B", 1),
-        coro("C", 3),
-    )
-    print(results)  # 预期: ['A 完成', 'B 完成', 'C 完成']
-asyncio.run(main())
+
+import asyncio
+class Event:
+    def __init__(self):
+        self.futures = None
+    def set(self):
+        if self.futures:
+            self.futures.set_result(1)
+    async def wait(self):
+        loop = asyncio.get_running_loop()
+        self.futures = loop.create_future()
+        await self.futures
+
+    pass
+async def test():
+    event = Event()
+    async def waiter():
+        print("waiter: 开始等待")
+        await event.wait()
+        print("waiter: 被唤醒")
+    async def setter():
+        print("setter: 1秒后设置事件")
+        await async_delay(1)
+        event.set()
+        print("setter: 事件已设置")
+    await gather(waiter(), setter())
+asyncio.run(test())
+
+# 预期结果：
+""" 
+waiter: 开始等待
+setter: 1秒后设置事件
+setter: 事件已设置
+waiter: 被唤醒 
+"""

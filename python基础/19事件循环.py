@@ -7,21 +7,21 @@ I/O密集型：异步
 3.事件循环时实现异步的基础手段 AbstractEventLoop类
 """
 # 事件循环需要手动创建
-import asyncio
-# 创建一个新的事件循环对象
-loop = asyncio.new_event_loop()
-# 绑定事件循环到当前线程
-asyncio.set_event_loop(loop)
-# 获取当前线程的事件循环
-current_loop = asyncio.get_event_loop()
-print("当前事件循环:", current_loop)
-# 移除事件循环绑定
-asyncio.set_event_loop(None)
-# 运行事件循环
-# 陷入死循环，除非在循环中终止，否则后续代码永远无法得到运行
-current_loop.run_forever()
-# 停止事件循环
-current_loop.stop()
+# import asyncio
+# # 创建一个新的事件循环对象
+# loop = asyncio.new_event_loop()
+# # 绑定事件循环到当前线程
+# asyncio.set_event_loop(loop)
+# # 获取当前线程的事件循环
+# current_loop = asyncio.get_event_loop()
+# print("当前事件循环:", current_loop)
+# # 移除事件循环绑定
+# asyncio.set_event_loop(None)
+# # 运行事件循环
+# # 陷入死循环，除非在循环中终止，否则后续代码永远无法得到运行
+# current_loop.run_forever()
+# # 停止事件循环
+# current_loop.stop()
 """
 _run_once（） 方法核心调用事件循环中的队列，确保每次该方法运行，都能保证ready队列中的所有回调得到执行
 1. 检查延时队列，加入ready,
@@ -32,3 +32,27 @@ _run_once（） 方法核心调用事件循环中的队列，确保每次该方�
 3.用timeout的时间阻塞线程，等待I/O，期间有任何IO任务马上加入ready队列
 4.复制ready队列中的所有任务，到执行队列中
 """
+
+
+"""
+1
+2
+4
+循环已停止
+"""
+import asyncio
+loop = asyncio.new_event_loop()
+def first():
+    print(1)
+def second():
+    print(2)
+    loop.call_soon(lambda: print(3))
+    loop.stop()
+def third():
+    print(4)
+loop.call_soon(first)
+loop.call_soon(second)
+loop.call_soon(third)
+
+loop.run_forever()
+print("循环已停止")
