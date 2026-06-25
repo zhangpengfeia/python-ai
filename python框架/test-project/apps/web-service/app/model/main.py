@@ -11,6 +11,7 @@ from app.model.sku import Sku             # noqa: F401
 async def init_db():
     engine = get_engine()
     async with engine.begin() as conn: # 开启事务上下文管理
+        await conn.run_sync(Base.metadata.drap_all) # 删除所有表
         await conn.run_sync(Base.metadata.create_all) # 创建所有表单，把 Base记录的所有语句执行
     print("✅ 数据库表创建完成")
 
