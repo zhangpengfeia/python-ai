@@ -1,19 +1,35 @@
 from pydantic_settings import BaseSettings
 
 
-class CommonSettings(BaseSettings):
+class _BaseSettingsWithEnv(BaseSettings):
+    # 配置读取方式
+    model_config = {"env_file": ".env", "extra": "ignore"}  # env文件的位置
+
+
+# 通用配置
+class _CommonSettings(_BaseSettingsWithEnv):
     environment: str = "development"
 
 
-class WebSettings(BaseSettings):
-    app_name: str = "Web Service API111"  # 实际读取 WEB_APP_NAME
+# web服务配置
+class _WebSettings(_BaseSettingsWithEnv):
+    app_name: str = "Web Service API"  # 实际读取 WEB_APP_NAME
 
     # 配置读取方式
-    model_config = {
-        "env_file": ".env",  # env文件的位置
-        "env_prefix": "WEB_",  # 当前类中的字段使用的前缀
-    }
+    model_config = {"env_prefix": "WEB_"}
 
 
-common_settings = CommonSettings()
-web_settings = WebSettings()
+# 数据库配置
+class _DBSettings(_BaseSettingsWithEnv):
+    host: str = "152.136.228.231"
+    port: str = "5432"
+    name: str = "duyi_db"
+    user: str = "admin"
+    password: str = "admin"
+
+    model_config = {"env_prefix": "DB_"}
+
+
+common_settings = _CommonSettings()
+web_settings = _WebSettings()
+db_settings = _DBSettings()
