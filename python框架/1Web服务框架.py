@@ -43,3 +43,11 @@ FastAPI({
 pydantic: 数据验证
 验证数据类型错误时报错，可以做更多精细化，再openapi.json里看到
 """
+
+"""
+三层架构变形
+1.API 操作 dto
+2.service 操作 dto
+3.model
+
+"""
