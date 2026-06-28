@@ -17,6 +17,10 @@ class _WebSettings(_BaseSettingsWithEnv):
 
     # 配置读取方式
     model_config = {"env_prefix": "WEB_"}
+    # 跨域白名单
+    cors_origins: str = "*" # 实际读取变量
+    # 允许前端读取的响应头
+    cors_expose_headers: str = "X-Process-Time"
 
 
 # 数据库配置

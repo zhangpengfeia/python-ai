@@ -79,3 +79,10 @@ test-results/
 tmp/
 temp/
 .cache/
+
+# temp
+/temp
+/tmp
+# test
+.coverage
+htmlcov/
