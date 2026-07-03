@@ -1,7 +1,4 @@
 public class demo {
-    public static void main(String[] args) {
-        System.out.println("hello world");
-    }
     /**
     数据类型：
         Java 的数据类型分为两大类：基本类型（primitive type） 和 引用类型（reference type）。
@@ -33,7 +30,35 @@ public class demo {
         | `Queue`   | `ArrayDeque`, `LinkedList` | 可变             | 有序（FIFO 或优先级）                      | 可重复         | `[1, 2, 3]`      |
         | 数组      | `int[]`, `String[]` 等     | 可变（长度固定） | 有序                                       | 可重复         | `{1, 2, 3}`      |
         | `String`  | `String`（字符序列）       | 不可变           | 有序                                       | 可重复         | `"hello"`        |
-    
+    方法：
+        分为静态方法和实例方法。
+            静态方法：在类名前调用，不需要创建对象。
+            实例方法：在对象前调用，需要先new创建对象。
+            方法重载：方法名相同，参数类型不同。
+            私有方法：只能在类内部调用，不能在外部调用。
+            共有方法：可以在类外部调用。
     */
+    public static void main(String[] args) {
+        System.out.println("hello world");
+    }
 
+    // 方法重载，参数类型不同，方法名相同
+    public static void add(int a, int b) {
+        System.out.println(a + b);
+    }
+    public static void add(double a, double b) { //
+        System.out.println(a + b);
+    }
+
+    /*
+    lambda 表达式：
+        一种匿名函数表示方式，允许将函数作为参数传递给方法，或将代码块作为数据处理，可以理解为可传递的代码块。
+        格式：(参数列表) -> {代码块}
+        例如：(a, b) -> a + b;
+    interface 接口：
+        只包含定义，没有方法实现。
+        注意：
+            lambda只能用于函数式接口
+            lambda不能独立存在，必须赋值给函数式接口变量或者作为参数传递。
+    */
 }
