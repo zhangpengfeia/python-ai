@@ -1257,36 +1257,22 @@ source = { editable = "apps/web-service" }
 dependencies = [
     { name = "alembic" },
     { name = "asyncpg" },
+    { name = "duyi-utils" },
     { name = "fastapi", extra = ["standard"] },
     { name = "psycopg2-binary" },
     { name = "pydantic-settings" },
     { name = "sqlalchemy", extra = ["asyncio"] },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "httpx" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = "==1.18.4" },
     { name = "asyncpg", specifier = "==0.31.0" },
+    { name = "duyi-utils", editable = "packages/duyi-utils" },
     { name = "fastapi", extras = ["standard"], specifier = "==0.136.3" },
     { name = "psycopg2-binary", specifier = "==2.9.12" },
     { name = "pydantic-settings", specifier = "==2.14.1" },
     { name = "sqlalchemy", extras = ["asyncio"], specifier = "==2.0.50" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "httpx", specifier = "==0.28.1" },
-    { name = "pytest", specifier = "==9.1.1" },
-    { name = "pytest-asyncio", specifier = "==1.4.0" },
-    { name = "pytest-cov", specifier = "==7.0.0" },
 ]
 
 [[package]]

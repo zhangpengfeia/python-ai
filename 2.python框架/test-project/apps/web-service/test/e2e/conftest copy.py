@@ -6,12 +6,12 @@ from pathlib import Path
 from contextlib import contextmanager
 
 # ─── 必须在任何 app 导入之前设置环境变量 ───
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 
-load_dotenv((Path(__file__).resolve().parent.parent.parent.parent.parent / ".env.test"))
-
-os.environ.setdefault("DB_NAME", "duyi_test_db")
+load_dotenv(Path(__file__).resolve().parent.parent.parent.parent.parent / ".env.test")
+os.environ["DB_NAME"] = "duyi_e2e_test_db"
 from app.core.config import DBSettings
+
 db_settings = DBSettings()
 
 import pytest
@@ -46,11 +46,9 @@ def _start_server():
     tmp_dir = Path(__file__).resolve().parent.parent.parent.parent.parent / "tmp"
     tmp_dir.mkdir(exist_ok=True)
     _log_file = open(tmp_dir / "test_server.log", "w")
-        # 复制 which uv 的输出替换这里
-    uv_bin = "/Users/a123/.cargo/bin/uv"
     _server_process = subprocess.Popen(
         [
-            uv_bin,
+            "uv",
             "run",
             "--package",
             "web-service",
@@ -58,12 +56,10 @@ def _start_server():
             "dev",
             "apps/web-service/app/main.py",
             "--port",
-            str(TEST_SERVER_PORT),
+            TEST_SERVER_PORT,
         ],
         stdout=_log_file,
         stderr=subprocess.STDOUT,
-        # 注入PATH，兜底兼容
-        env={**os.environ, "PATH": f"/Users/a123/.cargo/bin:{os.environ['PATH']}"}
     )
     import httpx
 
@@ -148,8 +144,9 @@ async def async_client():
 
     async with AsyncClient(base_url=f"http://localhost:{TEST_SERVER_PORT}") as client:
         yield client
-    
-_SKIP_CLEANUP_TABLE = {"setting", "settinggroups"}
+
+
+_SKIP_CLEANUP_TABLES = {"settinggroup", "setting"}
 
 
 @pytest.fixture(autouse=True)
@@ -168,6 +165,8 @@ async def cleanup_db(async_client):
 
     async with engine.begin() as conn:
         for table in reversed(Base.metadata.sorted_tables):
+            if table.name in _SKIP_CLEANUP_TABLES:
+                continue
             await conn.execute(
                 text(f'TRUNCATE TABLE "{table.name}" RESTART IDENTITY CASCADE')
             )

@@ -170,6 +170,8 @@ class SettingService(BaseService):
             .order_by(SettingGroup.id)
         )
         groups = result.unique().scalars().all()
+        for g in groups:
+            g.settings.sort(key=lambda s: s.id)
         return [SettingGroupResponse.model_validate(g) for g in groups]
 
     async def update_settings(
@@ -185,6 +187,5 @@ class SettingService(BaseService):
         for setting in settings:
             setting.value = update_map[setting.key]
 
-        # await self.db.flush()
-        await self.db.commit()
+        await self.db.flush()
         return [SettingItemResponse.model_validate(s) for s in settings]
