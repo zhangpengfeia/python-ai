@@ -41,7 +41,6 @@ __pycache__/
 venv/
 env/
 .venv/
-.env
 .env.docker
 *.egg-info/
 .pytest_cache/
@@ -54,6 +53,8 @@ htmlcov/
 *.sqlite3
 *.dump
 .env
+.env.*
+
 
 # ==================== 日志文件 ====================
 logs/
@@ -85,4 +86,5 @@ temp/
 /tmp
 # test
 .coverage
+.coverage.*
 htmlcov/
