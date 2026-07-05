@@ -6,6 +6,8 @@ from app.model.base import Base
 from app.model.category import Category   # noqa: F401
 from app.model.product import Product     # noqa: F401
 from app.model.sku import Sku             # noqa: F401
+from app.model.setting import Setting       # noqa: F401
+from app.model.setting_group import SettingGroup # noqa: F401
 
 
 async def init_db():

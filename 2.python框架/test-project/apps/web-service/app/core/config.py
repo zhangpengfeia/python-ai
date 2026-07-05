@@ -18,11 +18,11 @@ class WebSettings(BaseSettingsWithEnv):
 
 
 class DBSettings(BaseSettingsWithEnv):
-    host: str = ""
-    port: str = ""
-    name: str = ""
-    user: str = ""
-    password: str = ""
+    host: str = "152.136.228.231"
+    port: str = "5432"
+    name: str = "duyi_db"
+    user: str = "admin"
+    password: str = "admin"
 
     model_config = {"env_prefix": "DB_"}
 
