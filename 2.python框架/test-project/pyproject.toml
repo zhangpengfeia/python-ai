@@ -27,3 +27,9 @@ asyncio_mode = "auto"
 markers = [
     "smoke: 标记为冒烟测试，验证核心流程是否正常",
 ]
+
+[tool.test-runner]
+test_dirs = [
+    "apps/*/test",
+    "packages/*/test",
+]
