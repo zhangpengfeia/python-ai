@@ -33,7 +33,7 @@ def get_session_factory() -> async_sessionmaker[AsyncSession]:
     if _session_factory is None:
         _session_factory = async_sessionmaker(
             get_engine(),
-            class_=AsyncSession,
+            class_=AsyncSession,  # 明确指定使用异步 Session
             expire_on_commit=False,
             autoflush=True,
         )
@@ -41,8 +41,18 @@ def get_session_factory() -> async_sessionmaker[AsyncSession]:
     return _session_factory
 
 
-# 修复点：调用工厂() 创建会话实例再 async with
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    factory = get_session_factory()
-    async with factory() as session:
+async def get_db() -> AsyncGenerator[AsyncSession]:
+    session = get_session_factory()()
+    session.begin()
+    try:
         yield session
+    except:
+        await session.rollback()
+        raise
+    else:
+        await session.commit()
+    finally:
+        await session.close()
+
+    # async with get_session_factory().begin() as session:
+    #     yield session

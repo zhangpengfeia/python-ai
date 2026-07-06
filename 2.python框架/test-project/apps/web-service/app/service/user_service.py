@@ -28,7 +28,7 @@ class UserService(BaseService):
         )
         try:
             self.db.add(user)
-            await self.db.commit()
+            await self.db.flush()
         except IntegrityError as e:
             raise DatabaseException(
                 message="注册失败：用户名已存在",
