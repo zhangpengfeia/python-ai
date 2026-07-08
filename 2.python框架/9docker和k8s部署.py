@@ -34,5 +34,21 @@ ACr：
 公网：crpi-d63mghmzlhoz1myh.cn-beijing.personal.cr.aliyuncs.com/python-ai/zhangpf
 专有：crpi-d63mghmzlhoz1myh-vpc.cn-beijing.personal.cr.aliyuncs.com/python-ai/zhangpf
 
-推送docker镜像到ACR
+
+重新打版本号0.1，推送docker镜像到ACR，RDS收费，k8s收费
+
+k8s: 实现高可用，自动部署，扩缩和管理容器化应用程序
+运行容器：
+    服务器1，服务器2，服务器3...
+
+
+公网流量 http请求
+ ⬇
+ingress公网：可以做负载均衡，访问不同的service
+ ⬇
+service：包含多个pod，service之间内网互通，tcp协议，ser1: 登录，ser2: 订单系统，ser3:ai服务...，访问时访问ser，由ser做负载均衡
+ ⬇
+pod: 分组，每个pod提供一个服务，可以包含多个容器，一般是一个pod一个容器
+
+
 """
