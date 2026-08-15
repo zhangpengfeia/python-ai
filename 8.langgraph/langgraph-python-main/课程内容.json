@@ -1,0 +1,124 @@
+{
+  "title": "LangGraph工作流开发",
+  "author": "袁进",
+  "description": "本课程深入讲解LangGraph工作流编排框架，帮助开发者构建复杂、可控的Agent流程。从节点与状态管理基础出发，系统讲解CheckPoints持久化、ReAct模式、子反思机制、Human-in-the-loop人机协同等核心机制，并覆盖短期记忆与长期记忆管理、会话线程、时间旅行等高级特性。课程进一步拓展到动态分叉（Fan-out/Fan-in）、Map-Reduce并行模式、Agent Supervisor监管模式、条件路由与图编译优化，结合LangSmith调试追踪与自定义Tool节点开发，打造生产级Agent工作流系统。",
+  "playerPath": "AI大全栈 / AI / LangGraph工作流开发",
+  "resourceUrl": "https://gitee.com/dev-edu/langgraph-python",
+  "skills": [
+    "图",
+    "节点",
+    "边",
+    "状态",
+    "图编译",
+    "通道",
+    "Runnable",
+    "阿里云百炼平台",
+    "模型聚合商",
+    "langsmith",
+    "langchain model",
+    "model provider",
+    "多模态消息",
+    "消息模板",
+    "channel reducer",
+    "Agent Server",
+    "langgraph cli",
+    "langsmith Studio",
+    "Agent Chat",
+    "超步 Super Step",
+    "并发节点",
+    "条件边",
+    "循环图",
+    "检查点 CheckPointer",
+    "线程 Thread",
+    "快照 Snapshot",
+    "存储器",
+    "ToolNode",
+    "Fake Model",
+    "部署模式",
+    "断点调试",
+    "RunnableConfig",
+    "动态切换模型配置",
+    "工具遮蔽",
+    "动态系统提示词",
+    "Runtime",
+    "Runtime Context",
+    "Assistant API",
+    "Sub Agent"
+  ],
+  "type": "录播",
+  "status": "已上架",
+  "catalog": [
+    {
+      "title": "必看导言",
+      "showIndex": true
+    },
+    {
+      "title": "langgraph核心概念",
+      "showIndex": true
+    },
+    {
+      "title": "环境搭建",
+      "showIndex": true
+    },
+    {
+      "title": "模型",
+      "showIndex": true
+    },
+    {
+      "title": "消息",
+      "showIndex": true
+    },
+    {
+      "title": "Reducer",
+      "showIndex": true
+    },
+    {
+      "title": "Agent Server",
+      "showIndex": true
+    },
+    {
+      "title": "超步",
+      "showIndex": true
+    },
+    {
+      "title": "线程和检查点",
+      "showIndex": true
+    },
+    {
+      "title": "工具节点",
+      "showIndex": true
+    },
+    {
+      "title": "Mock Model",
+      "showIndex": true
+    },
+    {
+      "title": "部署模式和学习重心",
+      "showIndex": true
+    },
+    {
+      "title": "断点调试",
+      "showIndex": true
+    },
+    {
+      "title": "模型配置的动态切换",
+      "showIndex": true
+    },
+    {
+      "title": "RunnableConfig",
+      "showIndex": true
+    },
+    {
+      "title": "Runtime",
+      "showIndex": true
+    },
+    {
+      "title": "Assistant API",
+      "showIndex": true
+    },
+    {
+      "title": "子图",
+      "showIndex": true
+    }
+  ]
+}

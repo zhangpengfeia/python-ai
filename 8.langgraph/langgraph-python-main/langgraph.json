@@ -1,0 +1,10 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "agent": "langgraph_python.dev:agent",
+    "parallel_graph": "langgraph_python.dev:parallel_graph",
+    "branch_graph": "langgraph_python.dev:branch_graph",
+    "loop_graph": "langgraph_python.dev:loop_graph"
+  },
+  "env": ".env"
+}
