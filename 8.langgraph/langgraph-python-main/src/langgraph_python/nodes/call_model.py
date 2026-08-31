@@ -16,11 +16,12 @@ def _get_context() -> ContextSchema:
     return get_runtime(ContextSchema).context
 
 
-def _get_system_prompts(context: ContextSchema) -> list[SystemMessage]:
-    "根据 Context 获取系统提示词"
-    if not context or not context.system_prompt:
+def _get_system_prompts(state: CoreAgentState) -> list[SystemMessage]:
+    "根据 Thread 状态获取首次运行时生成的系统提示词快照"
+    system_prompt = state.get("system_prompt")
+    if not system_prompt:
         return []
-    return [SystemMessage(context.system_prompt)]
+    return [SystemMessage(system_prompt)]
 
 
 def _get_model(context: ContextSchema):
@@ -32,9 +33,9 @@ def _get_model(context: ContextSchema):
 
 def _get_tools(context: ContextSchema) -> list[BaseTool]:
     "根据 Context 获取工具列表，未配置时返回全部工具"
-    if context and context.tools:
-        return get_tools(context.tools)
-    return tools
+    if context is None or context.tools is None:
+        return tools
+    return get_tools(context.tools)
 
 
 def _get_model_config(context: ContextSchema) -> RunnableConfig:
@@ -56,8 +57,8 @@ async def call_model(state: CoreAgentState) -> dict:
 
     # 根据 Context 获取模型对象
     model = _get_model(context)
-    # 根据 Context 读取系统提示词
-    system_prompts = _get_system_prompts(context)
+    # 从 Thread 状态读取已经冻结的系统提示词
+    system_prompts = _get_system_prompts(state)
     # 根据 Context 获取工具列表
     active_tools = _get_tools(context)
     model_with_tools = model.bind_tools(active_tools)

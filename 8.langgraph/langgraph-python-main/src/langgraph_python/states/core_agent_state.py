@@ -23,3 +23,6 @@ class CoreAgentState(TypedDict):
 
     # 消息列表，使用 add_messages reducer 自动累积
     messages: Required[Annotated[list[BaseMessage], add_messages]]
+
+    # 线程首次运行时生成，后续运行始终复用同一份快照
+    system_prompt: NotRequired[str]

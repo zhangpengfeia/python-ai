@@ -32,6 +32,8 @@ def get_commits() -> list[dict]:
         ["git", "log", "--format=%H;%s"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     commits: list[dict] = []
     for line in result.stdout.strip().split("\n"):
@@ -57,6 +59,8 @@ def get_current_head() -> str:
         ["git", "rev-parse", "HEAD"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     return result.stdout.strip()
 
@@ -66,6 +70,8 @@ def get_current_branch() -> str:
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     return result.stdout.strip()
 
@@ -75,6 +81,8 @@ def checkout(number: str, commit_hash: str) -> None:
         ["git", "branch", "--list", number],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     if r.stdout.strip():
         subprocess.run(["git", "checkout", number], check=True)
@@ -125,7 +133,7 @@ def switch_course() -> None:
         "请选择要切换到的课程提交",
         choices=choices,
         style=CUSTOM_STYLE,
-        use_shortcuts=True,
+        use_shortcuts=False,
     ).ask()
 
     if selected is None:
@@ -153,6 +161,8 @@ def update_courses() -> None:
         ["git", "fetch", "origin"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     if fetch_result.returncode != 0:
         console.print(
@@ -168,6 +178,8 @@ def update_courses() -> None:
         ["git", "rev-parse", "origin/main"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     if origin_rev.returncode != 0:
         console.print(
@@ -184,6 +196,8 @@ def update_courses() -> None:
         ["git", "rev-parse", "main"],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
     )
     local_main_exists = local_rev.returncode == 0
     local_head = local_rev.stdout.strip() if local_main_exists else None
@@ -205,6 +219,8 @@ def update_courses() -> None:
         ff_check = subprocess.run(
             ["git", "merge-base", "--is-ancestor", "main", "origin/main"],
             capture_output=True,
+            encoding="utf-8",
+            errors="replace",
         )
         can_ff = ff_check.returncode == 0
     else:
@@ -217,11 +233,15 @@ def update_courses() -> None:
                 ["git", "checkout", "main"],
                 check=True,
                 capture_output=True,
+                encoding="utf-8",
+                errors="replace",
             )
         subprocess.run(
             ["git", "merge", "--ff-only", "origin/main"],
             check=True,
             capture_output=True,
+            encoding="utf-8",
+            errors="replace",
         )
         console.print(
             Panel(
@@ -242,6 +262,8 @@ def update_courses() -> None:
         ["git", "checkout", "--detach", "--force", "origin/main"],
         check=True,
         capture_output=True,
+        encoding="utf-8",
+        errors="replace",
     )
 
     # 删除除 main 外的所有本地分支
@@ -250,6 +272,8 @@ def update_courses() -> None:
         capture_output=True,
         text=True,
         check=True,
+        encoding="utf-8",
+        errors="replace",
     )
     for branch in branches_result.stdout.strip().split("\n"):
         if branch and branch != "main":
@@ -257,6 +281,8 @@ def update_courses() -> None:
                 ["git", "branch", "-D", branch],
                 check=True,
                 capture_output=True,
+                encoding="utf-8",
+                errors="replace",
             )
 
     # 强制将 main 指向 origin/main 并切过去
@@ -264,6 +290,8 @@ def update_courses() -> None:
         ["git", "checkout", "-B", "main", "origin/main"],
         check=True,
         capture_output=True,
+        encoding="utf-8",
+        errors="replace",
     )
 
     console.print(

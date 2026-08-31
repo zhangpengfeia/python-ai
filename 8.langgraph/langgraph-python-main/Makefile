@@ -1,4 +1,7 @@
-.PHONY: debug course course-push
+.PHONY: build debug course course-push
+
+build:
+	uv run langgraph build -t langgraph-python-agent:$(TAG)
 
 debug:
 	langgraph dev --debug-port 5678

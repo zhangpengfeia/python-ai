@@ -145,8 +145,7 @@ class ConfigFakeChatModel(BaseChatModel):
             return self._generate_parrot(messages)
         cfg = self._select_response(messages)
         if cfg.type == "error":
-            if self.config.sleep:
-                time.sleep(self.config.sleep)
+            self._sleep(self.config.sleep)
             raise FakeModelError(cfg.message or "模拟模型报错")
         self._sleep_production(cfg)
         message = self._build_aimessage(cfg, messages)
@@ -160,11 +159,10 @@ class ConfigFakeChatModel(BaseChatModel):
         **kwargs: Any,
     ) -> ChatResult:
         if self.config.mode == "parrot":
-            return self._generate_parrot(messages)
+            return await self._agenerate_parrot(messages)
         cfg = self._select_response(messages)
         if cfg.type == "error":
-            if self.config.sleep:
-                await asyncio.sleep(self.config.sleep)
+            await self._asleep(self.config.sleep)
             raise FakeModelError(cfg.message or "模拟模型报错")
         await self._asleep_production(cfg)
         message = self._build_aimessage(cfg, messages)
@@ -191,9 +189,52 @@ class ConfigFakeChatModel(BaseChatModel):
             return
         cfg = self._select_response(messages)
         if cfg.type == "error":
-            if self.config.sleep:
-                time.sleep(self.config.sleep)
+            self._sleep(self.config.sleep)
             raise FakeModelError(cfg.message or "模拟模型报错")
+        chunks = self._build_stream_chunks(cfg)
+        for idx, chunk in enumerate(chunks):
+            if idx == 0:
+                self._sleep(self.config.sleep)
+            elif self.config.token_sleep:
+                self._sleep(self.config.token_sleep)
+            if idx == len(chunks) - 1:
+                chunk.chunk_position = "last"
+            gen = ChatGenerationChunk(message=chunk)
+            if run_manager:
+                run_manager.on_llm_new_token(
+                    chunk.content if isinstance(chunk.content, str) else "", chunk=gen
+                )
+            yield gen
+
+    def _stream_text_chars(self, text: str, run_manager: Any = None):
+        for idx, c in enumerate(text):
+            if idx == 0:
+                self._sleep(self.config.sleep)
+            elif self.config.token_sleep:
+                self._sleep(self.config.token_sleep)
+            chunk = AIMessageChunk(content=c)
+            if idx == len(text) - 1:
+                chunk.chunk_position = "last"
+            gen = ChatGenerationChunk(message=chunk)
+            if run_manager:
+                run_manager.on_llm_new_token(c, chunk=gen)
+            yield gen
+
+    async def _astream_text_chars(self, text: str, run_manager: Any = None):
+        for idx, c in enumerate(text):
+            if idx == 0:
+                await self._asleep(self.config.sleep)
+            elif self.config.token_sleep:
+                await self._asleep(self.config.token_sleep)
+            chunk = AIMessageChunk(content=c)
+            if idx == len(text) - 1:
+                chunk.chunk_position = "last"
+            gen = ChatGenerationChunk(message=chunk)
+            if run_manager:
+                run_manager.on_llm_new_token(c, chunk=gen)
+            yield gen
+
+    def _build_stream_chunks(self, cfg: ResponseConfig) -> list[AIMessageChunk]:
         chunks: list[AIMessageChunk] = []
         if cfg.reasoning:
             chunks.extend(
@@ -227,12 +268,38 @@ class ConfigFakeChatModel(BaseChatModel):
             )
         if cfg.text:
             chunks.extend(AIMessageChunk(content=c) for c in cfg.text)
+        return chunks
+
+    async def _astream(
+        self,
+        messages: list[BaseMessage],
+        stop: list[str] | None = None,
+        run_manager: Any = None,
+        **kwargs: Any,
+    ):
+        if self.config.mode == "parrot":
+            content = self._parrot_content(messages)
+            if isinstance(content, str):
+                async for chunk in self._astream_text_chars(content, run_manager):
+                    yield chunk
+            else:
+                chunk = AIMessageChunk(content=content)
+                chunk.chunk_position = "last"
+                gen = ChatGenerationChunk(message=chunk)
+                if run_manager:
+                    run_manager.on_llm_new_token("", chunk=gen)
+                yield gen
+            return
+        cfg = self._select_response(messages)
+        if cfg.type == "error":
+            await self._asleep(self.config.sleep)
+            raise FakeModelError(cfg.message or "模拟模型报错")
+        chunks = self._build_stream_chunks(cfg)
         for idx, chunk in enumerate(chunks):
             if idx == 0:
-                if self.config.sleep:
-                    time.sleep(self.config.sleep)
+                await self._asleep(self.config.sleep)
             elif self.config.token_sleep:
-                time.sleep(self.config.token_sleep)
+                await self._asleep(self.config.token_sleep)
             if idx == len(chunks) - 1:
                 chunk.chunk_position = "last"
             gen = ChatGenerationChunk(message=chunk)
@@ -242,33 +309,6 @@ class ConfigFakeChatModel(BaseChatModel):
                 )
             yield gen
 
-    def _stream_text_chars(self, text: str, run_manager: Any = None):
-        for idx, c in enumerate(text):
-            if idx == 0:
-                if self.config.sleep:
-                    time.sleep(self.config.sleep)
-            elif self.config.token_sleep:
-                time.sleep(self.config.token_sleep)
-            chunk = AIMessageChunk(content=c)
-            if idx == len(text) - 1:
-                chunk.chunk_position = "last"
-            gen = ChatGenerationChunk(message=chunk)
-            if run_manager:
-                run_manager.on_llm_new_token(c, chunk=gen)
-            yield gen
-
-    async def _astream(
-        self,
-        messages: list[BaseMessage],
-        stop: list[str] | None = None,
-        run_manager: Any = None,
-        **kwargs: Any,
-    ):
-        for chunk in self._stream(
-            messages, stop=stop, run_manager=run_manager, **kwargs
-        ):
-            yield chunk
-
     def _generate_parrot(self, messages: list[BaseMessage]) -> ChatResult:
         if not messages:
             raise FakeModelError("parrot 模式需要输入消息")
@@ -276,10 +316,32 @@ class ConfigFakeChatModel(BaseChatModel):
         if isinstance(content, str):
             self._sleep_units(len(content))
         elif self.config.sleep:
-            time.sleep(self.config.sleep)
+            self._sleep(self.config.sleep)
         return ChatResult(
             generations=[ChatGeneration(message=AIMessage(content=content))]
         )
+
+    async def _agenerate_parrot(self, messages: list[BaseMessage]) -> ChatResult:
+        if not messages:
+            raise FakeModelError("parrot 模式需要输入消息")
+        content = messages[-1].content
+        if isinstance(content, str):
+            await self._asleep_units(len(content))
+        elif self.config.sleep:
+            await self._asleep(self.config.sleep)
+        return ChatResult(
+            generations=[ChatGeneration(message=AIMessage(content=content))]
+        )
+
+    def _sleep(self, total: float) -> None:
+        """同步睡眠：供同步接口（invoke / stream）使用。"""
+        if total:
+            time.sleep(total)
+
+    async def _asleep(self, total: float) -> None:
+        """异步睡眠：供异步接口（ainvoke / astream）使用，不阻塞事件循环。"""
+        if total:
+            await asyncio.sleep(total)
 
     def _sleep_production(self, cfg: ResponseConfig) -> None:
         units = len(cfg.text or "") + len(cfg.reasoning or "")
@@ -289,16 +351,18 @@ class ConfigFakeChatModel(BaseChatModel):
 
     def _sleep_units(self, units: int) -> None:
         total = self.config.sleep + max(0, units - 1) * self.config.token_sleep
-        if total:
-            time.sleep(total)
+        self._sleep(total)
+
+    async def _asleep_units(self, units: int) -> None:
+        total = self.config.sleep + max(0, units - 1) * self.config.token_sleep
+        await self._asleep(total)
 
     async def _asleep_production(self, cfg: ResponseConfig) -> None:
         units = len(cfg.text or "") + len(cfg.reasoning or "")
         if units == 0 and (cfg.tool_calls or cfg.images):
             units = 1
         total = self.config.sleep + max(0, units - 1) * self.config.token_sleep
-        if total:
-            await asyncio.sleep(total)
+        await self._asleep(total)
 
     @staticmethod
     def _parrot_content(messages: list[BaseMessage]) -> str | list[Any]:

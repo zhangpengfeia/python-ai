@@ -6,7 +6,7 @@
   "mode": "cycle",
 
   // sleep: 首个 token 产出之前的等待秒数（invoke 和 stream 都生效，可模拟模型思考/卡顿）
-  "sleep": 0,
+  "sleep": 10,
 
   // token_sleep: 每个 token 之间的间隔秒数（invoke 按总时长等额生效，stream 逐字生效）
   "token_sleep": 0,
@@ -22,15 +22,17 @@
   //   { "type": "error", "message": "..." }          -> 主动抛异常（测 retry）
   //   { "type": "echo_image", "text": "..." }        -> 回显输入里最后一张图
   "responses": [
+    // { "type": "error", "message": "错误1" },
+    // { "type": "error", "message": "错误2" },
     {
       "reasoning": "我应该按照模拟的配置返回给用户消息",
       "text": "你好，我是由配置文件驱动的模拟模型。你可以修改 mock_model.config.jsonc 来改变我的行为。"
-    },
-    {
-      "reasoning": "用户可能想看一张图片，我来生成并返回。",
-      "text": "这是一张示例图片：",
-      "images": ["https://picsum.photos/seed/langgraph/200/200"]
     }
+    // {
+    //   "reasoning": "用户可能想看一张图片，我来生成并返回。",
+    //   "text": "这是一张示例图片：",
+    //   "images": ["https://picsum.photos/seed/langgraph/200/200"]
+    // }
     // {
     //   "type": "error",
     //   "message": "模拟网络超时，请重试"
