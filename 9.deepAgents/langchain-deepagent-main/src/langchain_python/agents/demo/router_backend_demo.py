@@ -23,7 +23,7 @@ agent = create_deep_agent(
         default=StateBackend(),
         routes={
             "/static/": FilesystemBackend(
-                root_dir="/Users/yuanjin/工作/课/录播课/AI/langchain-python/temp"
+                root_dir="/Users/a123/D盘/学习/project/python-ai/9.deepAgents/langchain-deepagent-main/课件"
             )
         },
     ),

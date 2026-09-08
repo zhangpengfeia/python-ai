@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field, field_validator
 from langchain_python.core.sandbox import get_sandbox
 
 OUTPUT_DIR = "/home/user/output"
-PUBLIC_BASE_URL = "http://duyi-course.yuanjin.tech"
+PUBLIC_BASE_URL = "http://zhangff.cn"
 
 
 class DeployInput(BaseModel):

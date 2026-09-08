@@ -9,7 +9,10 @@
     "coding_agent": "langchain_python.agents.coding_agent:agent",
     "web_agent": "langchain_python.agents.web_agent:agent",
     "handoff": "langchain_python.agents.handoff:agent",
-    "router": "langchain_python.agents.router_demo.router:agent"
+    "router": "langchain_python.agents.router_demo.router:agent",
+    "hitl_agent": "langchain_python.agents.demo.hitl_agent_demo:agent",
+    "permission_agent": "langchain_python.agents.demo.permission_agent_demo:agent",
+    "router_backend_demo": "langchain_python.agents.demo.router_backend_demo:agent"
   },
   "env": ".env"
 }
