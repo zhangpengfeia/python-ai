@@ -41,7 +41,11 @@
     "多智能体设计模式",
     "异步子代理",
     "handoff模式",
-    "路由模式"
+    "路由模式",
+    "身份认证",
+    "接口授权",
+    "资源隔离",
+    "课程总结"
   ],
   "type": "录播",
   "status": "已上架",
@@ -172,6 +176,22 @@
     },
     {
       "title": "路由模式",
+      "showIndex": true
+    },
+    {
+      "title": "课程总结",
+      "showIndex": true
+    },
+    {
+      "title": "[补充]身份认证",
+      "showIndex": true
+    },
+    {
+      "title": "[补充]授权",
+      "showIndex": true
+    },
+    {
+      "title": "[补充]资源隔离",
       "showIndex": true
     }
   ]

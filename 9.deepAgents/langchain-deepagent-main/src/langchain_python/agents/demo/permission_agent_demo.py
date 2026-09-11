@@ -23,12 +23,12 @@ agent = create_deep_agent(
         FilesystemPermission(
             operations=["read", "write"],
             paths=["/home/user", "/home/user/**", "/home/user/**/.*{,/**}"],
-            mode="interrupt",
+            mode="allow",
         ),
         FilesystemPermission(
             operations=["read", "write"],
             paths=["/**", "/**/.*{,/**}"],
-            mode="interrupt",
+            mode="deny",
         ),
     ],
 )
