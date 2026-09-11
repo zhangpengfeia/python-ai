@@ -78,6 +78,31 @@ system_prompt = """# 角色
 """
 
 
+class DeployedArtifact(BaseModel):
+    """已通过deploy工具部署的一个产物入口。"""
+
+    name: str = Field(description="产物名称，例如首页或源码压缩包")
+    mime_type: str = Field(
+        description="产物的MIME类型，例如text/html、image/png或application/gzip"
+    )
+    url: str = Field(description="deploy工具返回的产物访问地址")
+
+
+class CodingAgentResponse(BaseModel):
+    """Coding Agent交付给用户的最终结构化响应。"""
+
+    status: Literal["completed", "cannot_deliver"] = Field(
+        description=(
+            "已完成并部署产物时使用completed；"
+            "需求超出平台交付能力时使用cannot_deliver"
+        )
+    )
+    summary: str = Field(description="向用户说明完成内容或无法交付原因的简要总结")
+    artifacts: list[DeployedArtifact] = Field(
+        default_factory=list,
+        description="deploy工具返回的全部产物入口；无法交付时为空列表",
+    )
+
 agent = create_deep_agent(
     model=model,
     tools=[*tools, make_transfer_to("coding_agent")],
@@ -85,7 +110,7 @@ agent = create_deep_agent(
         default=AliyunSandboxBackend(),
         routes={
             "/memories": FilesystemBackend(
-                "/Users/yuanjin/工作/课/录播课/AI/langchain-python/backup"
+                "/Users/a123/D盘/学习/project/python-ai/9.deepAgents/langchain-deepagent-main/backup"
             )
         },
     ),

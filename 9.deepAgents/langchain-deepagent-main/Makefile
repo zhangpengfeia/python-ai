@@ -4,7 +4,7 @@ build:
 	uv run langgraph build -t langgraph-python-agent:$(TAG)
 
 debug:
-	langgraph dev --debug-port 5678
+	uv run langgraph dev --debug-port 5678
 
 course:
 	uv run python scripts/course.py
