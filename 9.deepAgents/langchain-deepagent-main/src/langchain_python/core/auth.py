@@ -10,10 +10,11 @@ def _raise_invalid_token() -> Never:
     raise Auth.exceptions.HTTPException(status_code=401, detail="invalid token")
 
 
+# 身份认证
 @auth.authenticate
 async def authenticate(
     authorization: str | None,
-) -> Auth.types.MinimalUserDict:
+) -> Auth.types.MinimalUserDict: 
     """验证 Authorization: Bearer <token> 并返回当前用户。"""
     if not authorization:
         _raise_invalid_token()
@@ -26,7 +27,7 @@ async def authenticate(
 
     return MOCK_USER[token]
 
-
+# store隔离，单独处理，命名空间前缀区分
 @auth.on.store
 async def on_store(ctx: Auth.types.AuthContext, value: dict):
     permission = f"{ctx.resource}:{ctx.action}"
@@ -38,6 +39,7 @@ async def on_store(ctx: Auth.types.AuthContext, value: dict):
     return True
 
 
+# 针对资源 assistants 权限的授权
 @auth.on.assistants
 async def on_assistants(ctx: Auth.types.AuthContext, value: dict):
     permission = f"{ctx.resource}:{ctx.action}"
@@ -46,6 +48,7 @@ async def on_assistants(ctx: Auth.types.AuthContext, value: dict):
     return True
 
 
+# 所有授权注解，按用户隔离资源
 @auth.on
 async def authorization(ctx: Auth.types.AuthContext, value: dict):
     permission = f"{ctx.resource}:{ctx.action}"
